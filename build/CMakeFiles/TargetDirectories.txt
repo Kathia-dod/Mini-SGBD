@@ -1,0 +1,4 @@
+/home/usuario/Mini-SGBD/build/CMakeFiles/mini_sgbd.dir
+/home/usuario/Mini-SGBD/build/CMakeFiles/tests.dir
+/home/usuario/Mini-SGBD/build/CMakeFiles/edit_cache.dir
+/home/usuario/Mini-SGBD/build/CMakeFiles/rebuild_cache.dir
