@@ -63,11 +63,72 @@ void testStorageManager() {
         cout << "next_page_id persistido correctamente: " << sm2.getNumPages() << "\n";
     }
 
-    cout << "Avance 2 terminado\\n\n";
+    cout << "Avance 3 terminado\\n\n";
 }
 
+void testSlotDirectoryPartA() {
+    cout << "Slot Directory\n";
+ 
+    StorageManager sm("test_s4a.db");
+    uint32_t pid = sm.allocatePage();
+    Page* p = sm.fetchPage(pid);
+ 
+    // La pagina recien inicializada no tiene slots ni datos
+    assert(p->header()->num_slots == 0);
+    cout << "✓ num_slots inicial = 0\n";
+ 
+    // El espacio libre empieza justo despues del header
+    assert(p->header()->free_space_offset == PAGE_HEADER_SIZE);
+    cout << "✓ free_space_offset inicial = " << p->header()->free_space_offset
+         << " (= PAGE_HEADER_SIZE)\n";
+ 
+    // Todo el espacio de la pagina menos el header esta libre
+    assert(p->freeSpace() == PAGE_SIZE - PAGE_HEADER_SIZE);
+    cout << "✓ freeSpace() inicial = " << p->freeSpace() << " bytes\n";
+ 
+    // Verificar que sizeof(Slot) es exactamente 4 bytes (2 bytes offset + 2 bytes length, sin padding gracias a #pragma pack)
+    assert(sizeof(Slot) == 4);
+    cout << "✓ sizeof(Slot) = " << sizeof(Slot) << " bytes (correcto)\n";
+ 
+    // Verificar que sizeof(PageHeader) es exactamente 12 bytes
+    assert(sizeof(PageHeader) == 12);
+    cout << "✓ sizeof(PageHeader) = " << sizeof(PageHeader) << " bytes (correcto)\n";
+ 
+    // Verificar que la pagina esta marcada dirty tras init()
+    assert(p->dirty == true);
+    cout << "✓ dirty=true tras init()\n";
+ 
+    // Calcular cuantos slots cabrian en teoria en una pagina vacia (sin contar datos, solo el espacio del slot directory)
+    uint32_t max_slots = (PAGE_SIZE - PAGE_HEADER_SIZE) / sizeof(Slot);
+    cout << "✓ Slots maximos teoricos en pagina vacia: " << max_slots << "\n";
+ 
+    // Verificar que freeSpace() descuenta correctamente cuando simulamos manualmente que hay slots (sin insertar datos todavía)
+    // Para esto manipulamos num_slots directamente como prueba del layout
+    p->header()->num_slots = 3;
+    uint32_t esperado = PAGE_SIZE - PAGE_HEADER_SIZE - (3 * sizeof(Slot));
+    assert(p->freeSpace() == esperado);
+    cout << "✓ freeSpace() con 3 slots simulados = " << p->freeSpace()
+         << " bytes (descuenta " << 3 * sizeof(Slot) << " bytes de slots)\n";
+ 
+    // Restaurar para no afectar otros tests
+    p->header()->num_slots = 0;
+    p->header()->free_space_offset = PAGE_HEADER_SIZE;
+ 
+    cout << "Avance 4: parte a completada\n\n";
+}
+ 
 int main() {
-    testDiskManager();
-    testStorageManager();
+    try {
+        testDiskManager();
+        testStorageManager();
+        testSlotDirectoryPartA();
+        cout << "Pruebas superadas\n";
+    } catch (const DiskException& e) {
+        cerr << "ERROR de disco: " << e.what() << "\n";
+        return 1;
+    } catch (const exception& e) {
+        cerr << "ERROR inesperado: " << e.what() << "\n";
+        return 1;
+    }
     return 0;
 }
