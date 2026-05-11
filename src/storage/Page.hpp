@@ -57,13 +57,13 @@ public:
         return reinterpret_cast<const PageHeader*>(data);
     }
 
-    // Inicializa la página con ceros y establece los valores del header, llamar siempre en páginas recién asignadas con allocatePage().
+    // Inicializa la página con ceros y establece valores del header, llamar siempre en páginas recién asignadas con allocatePage().
     void init(uint32_t page_id) {
         memset(data, 0, PAGE_SIZE);
-        header()->page_id           = page_id;
-        header()->num_slots         = 0;
+        header()->page_id = page_id;
+        header()->num_slots = 0;
         header()->free_space_offset = PAGE_HEADER_SIZE;
-        header()->reserved          = 0;
+        header()->reserved = 0;
         dirty = true;
     }
 
@@ -73,7 +73,83 @@ public:
         return PAGE_SIZE - header()->free_space_offset - slots_area;
     }
 
+    // Inserta un registro de 'length' bytes apuntado por 'record', retorna el slot_id asignado (desde 0), o -1 si no hay espacio
+    // espacio necesario = length bytes de datos + sizeof(Slot), dirty = true si la inserción fue exitosa.
+    int insertRecord(const char* record, uint16_t length) {
+        if (freeSpace() < static_cast<uint32_t>(length + sizeof(Slot)))
+            return -1;
+        PageHeader* h = header();
+        // Copiar el registro al área de datos en la posición libre actual
+        memcpy(data + h->free_space_offset, record, length);
+        // Registrar el slot: nuevo slot_id = índice actual de num_slots
+        uint16_t sid = h->num_slots;
+        Slot* slot = getSlot(sid);
+        slot->offset = h->free_space_offset;
+        slot->length = length;
 
+        h->free_space_offset += length;
+        h->num_slots++;
+
+        dirty = true;
+        return sid;
+    }
+
+    // Lee el registro del slot_id al buffer 'dest', escribe en 'out_length' la longitud real del registro leído, da false si slot_id no existe o el registro fue eliminado.
+    bool getRecord(uint16_t slot_id, char* dest, uint16_t& out_length) {
+        const PageHeader* h = header();
+        // el slot existe dentro del rango
+        if (slot_id >= h->num_slots)
+            return false;
+
+        Slot* slot = getSlot(slot_id);
+
+        if (slot->offset == SLOT_DELETED)
+            return false;
+
+        out_length = slot->length;
+        memcpy(dest, data + slot->offset, slot->length);
+        return true;
+    }
+
+    // Actualiza el contenido del registro en slot_id con new_data, PERO length debe ser igual al tamaño original del registro, solo actualiza bytes en el área de datos sin mover nada en página
+    // Retorna false si slot_id no existe, fue eliminado, o la longitud no coincide
+    bool updateRecord(uint16_t slot_id, const char* new_data, uint16_t length) {
+        const PageHeader* h = header();
+
+        if (slot_id >= h->num_slots)
+            return false;
+
+        Slot* slot = getSlot(slot_id);
+
+        if (slot->offset == SLOT_DELETED)
+            return false;
+
+        if (slot->length != length)
+            return false;
+
+        memcpy(data + slot->offset, new_data, length);
+        dirty = true;
+        return true;
+    }
+
+    // Elimina lógicamente el registro del slot_id
+    // Retorna false si slot_id no existe o ya estaba eliminado
+    bool deleteRecord(uint16_t slot_id) {
+        const PageHeader* h = header();
+
+        if (slot_id >= h->num_slots)
+            return false;
+
+        Slot* slot = getSlot(slot_id);
+
+        if (slot->offset == SLOT_DELETED)
+            return false;
+
+        slot->offset = SLOT_DELETED;
+        slot->length = 0;
+        dirty = true;
+        return true;
+    }
 
 private:
     // Retorna puntero al Slot N dentro del buffer, no valida si slot_id existe

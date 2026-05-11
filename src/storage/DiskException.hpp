@@ -7,6 +7,5 @@ using namespace std;
 // Usar esta clase (no runtime_error genérico) permite que el Buffer Manager
 class DiskException : public runtime_error {
 public:
-    explicit DiskException(const string& msg)
-        : runtime_error("[DiskManager] " + msg) {}
+    explicit DiskException(const string& msg) : runtime_error("[DiskManager] " + msg) {}
 };

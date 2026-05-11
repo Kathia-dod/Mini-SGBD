@@ -66,62 +66,114 @@ void testStorageManager() {
     cout << "Avance 3 terminado\\n\n";
 }
 
-void testSlotDirectoryPartA() {
+void testSlotDirectory() {
     cout << "Slot Directory\n";
- 
-    StorageManager sm("test_s4a.db");
-    uint32_t pid = sm.allocatePage();
-    Page* p = sm.fetchPage(pid);
- 
-    // La pagina recien inicializada no tiene slots ni datos
-    assert(p->header()->num_slots == 0);
-    cout << "✓ num_slots inicial = 0\n";
- 
-    // El espacio libre empieza justo despues del header
-    assert(p->header()->free_space_offset == PAGE_HEADER_SIZE);
-    cout << "✓ free_space_offset inicial = " << p->header()->free_space_offset
-         << " (= PAGE_HEADER_SIZE)\n";
- 
-    // Todo el espacio de la pagina menos el header esta libre
-    assert(p->freeSpace() == PAGE_SIZE - PAGE_HEADER_SIZE);
-    cout << "✓ freeSpace() inicial = " << p->freeSpace() << " bytes\n";
- 
-    // Verificar que sizeof(Slot) es exactamente 4 bytes (2 bytes offset + 2 bytes length, sin padding gracias a #pragma pack)
-    assert(sizeof(Slot) == 4);
-    cout << "✓ sizeof(Slot) = " << sizeof(Slot) << " bytes (correcto)\n";
- 
-    // Verificar que sizeof(PageHeader) es exactamente 12 bytes
-    assert(sizeof(PageHeader) == 12);
-    cout << "✓ sizeof(PageHeader) = " << sizeof(PageHeader) << " bytes (correcto)\n";
- 
-    // Verificar que la pagina esta marcada dirty tras init()
-    assert(p->dirty == true);
-    cout << "✓ dirty=true tras init()\n";
- 
-    // Calcular cuantos slots cabrian en teoria en una pagina vacia (sin contar datos, solo el espacio del slot directory)
-    uint32_t max_slots = (PAGE_SIZE - PAGE_HEADER_SIZE) / sizeof(Slot);
-    cout << "✓ Slots maximos teoricos en pagina vacia: " << max_slots << "\n";
- 
-    // Verificar que freeSpace() descuenta correctamente cuando simulamos manualmente que hay slots (sin insertar datos todavía)
-    // Para esto manipulamos num_slots directamente como prueba del layout
-    p->header()->num_slots = 3;
-    uint32_t esperado = PAGE_SIZE - PAGE_HEADER_SIZE - (3 * sizeof(Slot));
-    assert(p->freeSpace() == esperado);
-    cout << "✓ freeSpace() con 3 slots simulados = " << p->freeSpace()
-         << " bytes (descuenta " << 3 * sizeof(Slot) << " bytes de slots)\n";
- 
-    // Restaurar para no afectar otros tests
-    p->header()->num_slots = 0;
-    p->header()->free_space_offset = PAGE_HEADER_SIZE;
- 
-    cout << "Avance 4: parte a completada\n\n";
+
+    // layout inicial
+    {
+        StorageManager sm("test_s4a.db");
+        uint32_t pid = sm.allocatePage();
+        Page* p = sm.fetchPage(pid);
+
+        assert(p->header()->num_slots == 0);
+        assert(p->header()->free_space_offset == PAGE_HEADER_SIZE);
+        assert(p->freeSpace() == PAGE_SIZE - PAGE_HEADER_SIZE);
+        cout << "Layout inicial: sin slots, freeSpace="
+             << p->freeSpace() << " bytes\n";
+    }
+
+    // inserción y recuperación
+    {
+        StorageManager sm("test_s4b.db");
+        uint32_t pid = sm.allocatePage();
+        Page* p = sm.fetchPage(pid);
+
+        // Registros de longitud variable 
+        const char* r0 = "Alice|25|Arequipa";    // 17 bytes
+        const char* r1 = "Bob|17|Puno";           // 11 bytes
+        const char* r2 = "Carol|22|Cusco";        // 14 bytes
+
+        int s0 = p->insertRecord(r0, strlen(r0));
+        int s1 = p->insertRecord(r1, strlen(r1));
+        int s2 = p->insertRecord(r2, strlen(r2));
+
+        assert(s0 == 0 && s1 == 1 && s2 == 2);
+        assert(p->header()->num_slots == 3);
+        cout << "Inserción: 3 registros de largo variable (slots 0,1,2)\n";
+
+        // Recuperación por slot_id
+        char buf[256]; uint16_t len;
+
+        assert(p->getRecord(0, buf, len));
+        buf[len] = '\0';
+        assert(strcmp(buf, r0) == 0);
+        cout << "getRecord(0): " << buf << "\n";
+
+        assert(p->getRecord(1, buf, len));
+        buf[len] = '\0';
+        assert(strcmp(buf, r1) == 0);
+        cout << "getRecord(1): " << buf << "\n";
+
+        assert(p->getRecord(2, buf, len));
+        buf[len] = '\0';
+        assert(strcmp(buf, r2) == 0);
+        cout << "getRecord(2): " << buf << "\n";
+
+        // updateRecord: mismo tamaño exacto
+        const char* r0_v2 = "Alice|26|Arequipa";
+        assert(strlen(r0_v2) == strlen(r0));
+        assert(p->updateRecord(0, r0_v2, strlen(r0_v2)));
+        p->getRecord(0, buf, len);
+        buf[len] = '\0';
+        assert(strcmp(buf, r0_v2) == 0);
+        cout << "updateRecord(0): " << buf << "\n";
+
+        // deleteRecord: eliminación lógica
+        assert(p->deleteRecord(1));
+        assert(!p->getRecord(1, buf, len));  // ya no accesible
+        assert(p->getRecord(2, buf, len));  // slot 2 intacto
+        buf[len] = '\0';
+        assert(strcmp(buf, r2) == 0);
+        cout << "deleteRecord(1): slot 1 eliminado, slot 2 intacto\n";
+
+        // Slot fuera de rango
+        assert(!p->getRecord(99, buf, len));
+        cout << "slot_id inexistente retorna false\n";
+
+        // Flush y verificar dirty
+        sm.flushPage(pid);
+        assert(p->dirty == false);
+        cout << "flushPage: dirty=false\n";
+    }
+
+    // Persistencia: cerrar y reabrir
+    {
+        StorageManager sm("test_s4b.db");
+        Page* p = sm.fetchPage(1);  // pid=1 (pid=0 es metapágina)
+        char buf[256]; uint16_t len;
+
+        assert(p->getRecord(0, buf, len));
+        buf[len] = '\0';
+        assert(strcmp(buf, "Alice|26|Arequipa") == 0);
+        cout << "Persistencia: slot 0 = " << buf << "\n";
+
+        assert(!p->getRecord(1, buf, len));
+        cout << "Persistencia: slot 1 sigue eliminado\n";
+
+        assert(p->getRecord(2, buf, len));
+        buf[len] = '\0';
+        assert(strcmp(buf, "Carol|22|Cusco") == 0);
+        cout << "Persistencia: slot 2 = " << buf << "\n";
+    }
+
+    cout << "Avance 4 hecho\n\n";
 }
  
 int main() {
     try {
         testDiskManager();
         testStorageManager();
-        testSlotDirectoryPartA();
+        testSlotDirectory();
         cout << "Pruebas superadas\n";
     } catch (const DiskException& e) {
         cerr << "ERROR de disco: " << e.what() << "\n";

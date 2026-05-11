@@ -26,9 +26,9 @@ public:
 
 private:
     DiskManager disk_;
-    Page        pages_[MAX_PAGES];
-    bool        loaded_[MAX_PAGES];
-    uint32_t    next_page_id_;
+    Page pages_[MAX_PAGES];
+    bool loaded_[MAX_PAGES];
+    uint32_t next_page_id_;
 
     // Lee/escribe next_page_id desde/hacia la metapágina (página 0 en disco), garantiza que tras reiniciar el programa, allocatePage() no sobreescriba páginas que ya tienen datos
     void loadMeta();
