@@ -26,7 +26,13 @@ add_executable(test_disk
     ${STORAGE_SOURCES}
 )
 
+#------------------TESTS-----------------------
 add_executable(test_test1
     tests/test_disk_multipage.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_test2
+    tests/test_storage_persist.cpp
     ${STORAGE_SOURCES}
 )
