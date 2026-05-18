@@ -112,7 +112,7 @@ int main() {
         test3_datos_sobreviven_reinicio();
         test4_metapagina_no_sobreescrita();
         test5_fetch_no_reinicializa();
-        cout << "\n✓ Todos los tests de persistencia y recuperación del StorageManager pasaron.\n";
+        cout << "\n✓ Todos los tests pasaron.\n";
     } catch (const DiskException& e) {
         cerr << "ERROR DiskException: " << e.what() << "\n";
         return 1;

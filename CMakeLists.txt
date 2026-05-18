@@ -41,3 +41,8 @@ add_executable(test_3
     tests/test_slot_directory.cpp
     ${STORAGE_SOURCES}
 )
+
+add_executable(test_4
+    tests/test_integrity.cpp
+    ${STORAGE_SOURCES}
+)
