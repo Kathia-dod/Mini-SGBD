@@ -46,3 +46,8 @@ add_executable(test_4
     tests/test_integrity.cpp
     ${STORAGE_SOURCES}
 )
+
+add_executable(test_5
+    tests/test_end2end.cpp
+    ${STORAGE_SOURCES}
+)
