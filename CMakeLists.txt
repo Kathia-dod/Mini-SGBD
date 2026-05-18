@@ -20,3 +20,13 @@ add_executable(tests
     tests/test_main.cpp
     ${STORAGE_SOURCES}
 )
+
+add_executable(test_disk
+    tests/test_disk.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_test1
+    tests/test_disk_multipage.cpp
+    ${STORAGE_SOURCES}
+)
