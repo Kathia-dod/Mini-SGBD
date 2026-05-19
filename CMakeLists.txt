@@ -20,3 +20,34 @@ add_executable(tests
     tests/test_main.cpp
     ${STORAGE_SOURCES}
 )
+
+add_executable(test_disk
+    tests/test_disk.cpp
+    ${STORAGE_SOURCES}
+)
+
+#------------------TESTS-----------------------
+add_executable(test_1
+    tests/test_disk_multipage.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_2
+    tests/test_storage_persist.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_3
+    tests/test_slot_directory.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_4
+    tests/test_integrity.cpp
+    ${STORAGE_SOURCES}
+)
+
+add_executable(test_5
+    tests/test_end2end.cpp
+    ${STORAGE_SOURCES}
+)
