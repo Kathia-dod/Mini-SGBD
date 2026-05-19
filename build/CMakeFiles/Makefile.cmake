@@ -41,4 +41,10 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/mini_sgbd.dir/DependInfo.cmake"
   "CMakeFiles/tests.dir/DependInfo.cmake"
+  "CMakeFiles/test_disk.dir/DependInfo.cmake"
+  "CMakeFiles/test_1.dir/DependInfo.cmake"
+  "CMakeFiles/test_2.dir/DependInfo.cmake"
+  "CMakeFiles/test_3.dir/DependInfo.cmake"
+  "CMakeFiles/test_4.dir/DependInfo.cmake"
+  "CMakeFiles/test_5.dir/DependInfo.cmake"
   )

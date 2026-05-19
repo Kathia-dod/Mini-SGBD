@@ -142,6 +142,84 @@ tests/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
 .PHONY : tests/fast
 
+#=============================================================================
+# Target rules for targets named test_disk
+
+# Build rule for target.
+test_disk: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_disk
+.PHONY : test_disk
+
+# fast build rule for target.
+test_disk/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/build
+.PHONY : test_disk/fast
+
+#=============================================================================
+# Target rules for targets named test_1
+
+# Build rule for target.
+test_1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_1
+.PHONY : test_1
+
+# fast build rule for target.
+test_1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/build
+.PHONY : test_1/fast
+
+#=============================================================================
+# Target rules for targets named test_2
+
+# Build rule for target.
+test_2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_2
+.PHONY : test_2
+
+# fast build rule for target.
+test_2/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/build
+.PHONY : test_2/fast
+
+#=============================================================================
+# Target rules for targets named test_3
+
+# Build rule for target.
+test_3: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_3
+.PHONY : test_3
+
+# fast build rule for target.
+test_3/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/build
+.PHONY : test_3/fast
+
+#=============================================================================
+# Target rules for targets named test_4
+
+# Build rule for target.
+test_4: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_4
+.PHONY : test_4
+
+# fast build rule for target.
+test_4/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/build
+.PHONY : test_4/fast
+
+#=============================================================================
+# Target rules for targets named test_5
+
+# Build rule for target.
+test_5: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_5
+.PHONY : test_5
+
+# fast build rule for target.
+test_5/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/build
+.PHONY : test_5/fast
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -173,6 +251,12 @@ src/storage/DiskManager.o: src/storage/DiskManager.cpp.o
 src/storage/DiskManager.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.o
 .PHONY : src/storage/DiskManager.cpp.o
 
 src/storage/DiskManager.i: src/storage/DiskManager.cpp.i
@@ -182,6 +266,12 @@ src/storage/DiskManager.i: src/storage/DiskManager.cpp.i
 src/storage/DiskManager.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.i
 .PHONY : src/storage/DiskManager.cpp.i
 
 src/storage/DiskManager.s: src/storage/DiskManager.cpp.s
@@ -191,6 +281,12 @@ src/storage/DiskManager.s: src/storage/DiskManager.cpp.s
 src/storage/DiskManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.s
 .PHONY : src/storage/DiskManager.cpp.s
 
 src/storage/StorageManager.o: src/storage/StorageManager.cpp.o
@@ -200,6 +296,12 @@ src/storage/StorageManager.o: src/storage/StorageManager.cpp.o
 src/storage/StorageManager.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/StorageManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.o
 .PHONY : src/storage/StorageManager.cpp.o
 
 src/storage/StorageManager.i: src/storage/StorageManager.cpp.i
@@ -209,6 +311,12 @@ src/storage/StorageManager.i: src/storage/StorageManager.cpp.i
 src/storage/StorageManager.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/StorageManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.i
 .PHONY : src/storage/StorageManager.cpp.i
 
 src/storage/StorageManager.s: src/storage/StorageManager.cpp.s
@@ -218,7 +326,109 @@ src/storage/StorageManager.s: src/storage/StorageManager.cpp.s
 src/storage/StorageManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/storage/StorageManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.s
 .PHONY : src/storage/StorageManager.cpp.s
+
+tests/test_disk.o: tests/test_disk.cpp.o
+.PHONY : tests/test_disk.o
+
+# target to build an object file
+tests/test_disk.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/tests/test_disk.cpp.o
+.PHONY : tests/test_disk.cpp.o
+
+tests/test_disk.i: tests/test_disk.cpp.i
+.PHONY : tests/test_disk.i
+
+# target to preprocess a source file
+tests/test_disk.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/tests/test_disk.cpp.i
+.PHONY : tests/test_disk.cpp.i
+
+tests/test_disk.s: tests/test_disk.cpp.s
+.PHONY : tests/test_disk.s
+
+# target to generate assembly for a file
+tests/test_disk.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/tests/test_disk.cpp.s
+.PHONY : tests/test_disk.cpp.s
+
+tests/test_disk_multipage.o: tests/test_disk_multipage.cpp.o
+.PHONY : tests/test_disk_multipage.o
+
+# target to build an object file
+tests/test_disk_multipage.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/tests/test_disk_multipage.cpp.o
+.PHONY : tests/test_disk_multipage.cpp.o
+
+tests/test_disk_multipage.i: tests/test_disk_multipage.cpp.i
+.PHONY : tests/test_disk_multipage.i
+
+# target to preprocess a source file
+tests/test_disk_multipage.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/tests/test_disk_multipage.cpp.i
+.PHONY : tests/test_disk_multipage.cpp.i
+
+tests/test_disk_multipage.s: tests/test_disk_multipage.cpp.s
+.PHONY : tests/test_disk_multipage.s
+
+# target to generate assembly for a file
+tests/test_disk_multipage.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/tests/test_disk_multipage.cpp.s
+.PHONY : tests/test_disk_multipage.cpp.s
+
+tests/test_end2end.o: tests/test_end2end.cpp.o
+.PHONY : tests/test_end2end.o
+
+# target to build an object file
+tests/test_end2end.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/tests/test_end2end.cpp.o
+.PHONY : tests/test_end2end.cpp.o
+
+tests/test_end2end.i: tests/test_end2end.cpp.i
+.PHONY : tests/test_end2end.i
+
+# target to preprocess a source file
+tests/test_end2end.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/tests/test_end2end.cpp.i
+.PHONY : tests/test_end2end.cpp.i
+
+tests/test_end2end.s: tests/test_end2end.cpp.s
+.PHONY : tests/test_end2end.s
+
+# target to generate assembly for a file
+tests/test_end2end.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/tests/test_end2end.cpp.s
+.PHONY : tests/test_end2end.cpp.s
+
+tests/test_integrity.o: tests/test_integrity.cpp.o
+.PHONY : tests/test_integrity.o
+
+# target to build an object file
+tests/test_integrity.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/tests/test_integrity.cpp.o
+.PHONY : tests/test_integrity.cpp.o
+
+tests/test_integrity.i: tests/test_integrity.cpp.i
+.PHONY : tests/test_integrity.i
+
+# target to preprocess a source file
+tests/test_integrity.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/tests/test_integrity.cpp.i
+.PHONY : tests/test_integrity.cpp.i
+
+tests/test_integrity.s: tests/test_integrity.cpp.s
+.PHONY : tests/test_integrity.s
+
+# target to generate assembly for a file
+tests/test_integrity.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/tests/test_integrity.cpp.s
+.PHONY : tests/test_integrity.cpp.s
 
 tests/test_main.o: tests/test_main.cpp.o
 .PHONY : tests/test_main.o
@@ -244,6 +454,54 @@ tests/test_main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/tests/test_main.cpp.s
 .PHONY : tests/test_main.cpp.s
 
+tests/test_slot_directory.o: tests/test_slot_directory.cpp.o
+.PHONY : tests/test_slot_directory.o
+
+# target to build an object file
+tests/test_slot_directory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/tests/test_slot_directory.cpp.o
+.PHONY : tests/test_slot_directory.cpp.o
+
+tests/test_slot_directory.i: tests/test_slot_directory.cpp.i
+.PHONY : tests/test_slot_directory.i
+
+# target to preprocess a source file
+tests/test_slot_directory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/tests/test_slot_directory.cpp.i
+.PHONY : tests/test_slot_directory.cpp.i
+
+tests/test_slot_directory.s: tests/test_slot_directory.cpp.s
+.PHONY : tests/test_slot_directory.s
+
+# target to generate assembly for a file
+tests/test_slot_directory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/tests/test_slot_directory.cpp.s
+.PHONY : tests/test_slot_directory.cpp.s
+
+tests/test_storage_persist.o: tests/test_storage_persist.cpp.o
+.PHONY : tests/test_storage_persist.o
+
+# target to build an object file
+tests/test_storage_persist.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/tests/test_storage_persist.cpp.o
+.PHONY : tests/test_storage_persist.cpp.o
+
+tests/test_storage_persist.i: tests/test_storage_persist.cpp.i
+.PHONY : tests/test_storage_persist.i
+
+# target to preprocess a source file
+tests/test_storage_persist.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/tests/test_storage_persist.cpp.i
+.PHONY : tests/test_storage_persist.cpp.i
+
+tests/test_storage_persist.s: tests/test_storage_persist.cpp.s
+.PHONY : tests/test_storage_persist.s
+
+# target to generate assembly for a file
+tests/test_storage_persist.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/tests/test_storage_persist.cpp.s
+.PHONY : tests/test_storage_persist.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -253,6 +511,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... mini_sgbd"
+	@echo "... test_1"
+	@echo "... test_2"
+	@echo "... test_3"
+	@echo "... test_4"
+	@echo "... test_5"
+	@echo "... test_disk"
 	@echo "... tests"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
@@ -263,9 +527,27 @@ help:
 	@echo "... src/storage/StorageManager.o"
 	@echo "... src/storage/StorageManager.i"
 	@echo "... src/storage/StorageManager.s"
+	@echo "... tests/test_disk.o"
+	@echo "... tests/test_disk.i"
+	@echo "... tests/test_disk.s"
+	@echo "... tests/test_disk_multipage.o"
+	@echo "... tests/test_disk_multipage.i"
+	@echo "... tests/test_disk_multipage.s"
+	@echo "... tests/test_end2end.o"
+	@echo "... tests/test_end2end.i"
+	@echo "... tests/test_end2end.s"
+	@echo "... tests/test_integrity.o"
+	@echo "... tests/test_integrity.i"
+	@echo "... tests/test_integrity.s"
 	@echo "... tests/test_main.o"
 	@echo "... tests/test_main.i"
 	@echo "... tests/test_main.s"
+	@echo "... tests/test_slot_directory.o"
+	@echo "... tests/test_slot_directory.i"
+	@echo "... tests/test_slot_directory.s"
+	@echo "... tests/test_storage_persist.o"
+	@echo "... tests/test_storage_persist.i"
+	@echo "... tests/test_storage_persist.s"
 .PHONY : help
 
 

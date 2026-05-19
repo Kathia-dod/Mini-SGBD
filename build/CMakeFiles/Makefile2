@@ -65,6 +65,12 @@ CMAKE_BINARY_DIR = /home/usuario/Mini-SGBD/build
 # The main recursive "all" target.
 all: CMakeFiles/mini_sgbd.dir/all
 all: CMakeFiles/tests.dir/all
+all: CMakeFiles/test_disk.dir/all
+all: CMakeFiles/test_1.dir/all
+all: CMakeFiles/test_2.dir/all
+all: CMakeFiles/test_3.dir/all
+all: CMakeFiles/test_4.dir/all
+all: CMakeFiles/test_5.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -74,6 +80,12 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/mini_sgbd.dir/clean
 clean: CMakeFiles/tests.dir/clean
+clean: CMakeFiles/test_disk.dir/clean
+clean: CMakeFiles/test_1.dir/clean
+clean: CMakeFiles/test_2.dir/clean
+clean: CMakeFiles/test_3.dir/clean
+clean: CMakeFiles/test_4.dir/clean
+clean: CMakeFiles/test_5.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -109,7 +121,7 @@ CMakeFiles/mini_sgbd.dir/clean:
 CMakeFiles/tests.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=5,6,7,8 "Built target tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=29,30,31,32 "Built target tests"
 .PHONY : CMakeFiles/tests.dir/all
 
 # Build rule for subdir invocation for target.
@@ -127,6 +139,162 @@ tests: CMakeFiles/tests.dir/rule
 CMakeFiles/tests.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/clean
 .PHONY : CMakeFiles/tests.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_disk.dir
+
+# All Build rule for target.
+CMakeFiles/test_disk.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=25,26,27,28 "Built target test_disk"
+.PHONY : CMakeFiles/test_disk.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_disk.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_disk.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_disk.dir/rule
+
+# Convenience name for target.
+test_disk: CMakeFiles/test_disk.dir/rule
+.PHONY : test_disk
+
+# clean rule for target.
+CMakeFiles/test_disk.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_disk.dir/build.make CMakeFiles/test_disk.dir/clean
+.PHONY : CMakeFiles/test_disk.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_1.dir
+
+# All Build rule for target.
+CMakeFiles/test_1.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=5,6,7,8 "Built target test_1"
+.PHONY : CMakeFiles/test_1.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_1.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_1.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_1.dir/rule
+
+# Convenience name for target.
+test_1: CMakeFiles/test_1.dir/rule
+.PHONY : test_1
+
+# clean rule for target.
+CMakeFiles/test_1.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_1.dir/build.make CMakeFiles/test_1.dir/clean
+.PHONY : CMakeFiles/test_1.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_2.dir
+
+# All Build rule for target.
+CMakeFiles/test_2.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=9,10,11,12 "Built target test_2"
+.PHONY : CMakeFiles/test_2.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_2.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_2.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_2.dir/rule
+
+# Convenience name for target.
+test_2: CMakeFiles/test_2.dir/rule
+.PHONY : test_2
+
+# clean rule for target.
+CMakeFiles/test_2.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_2.dir/build.make CMakeFiles/test_2.dir/clean
+.PHONY : CMakeFiles/test_2.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_3.dir
+
+# All Build rule for target.
+CMakeFiles/test_3.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=13,14,15,16 "Built target test_3"
+.PHONY : CMakeFiles/test_3.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_3.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_3.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_3.dir/rule
+
+# Convenience name for target.
+test_3: CMakeFiles/test_3.dir/rule
+.PHONY : test_3
+
+# clean rule for target.
+CMakeFiles/test_3.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/clean
+.PHONY : CMakeFiles/test_3.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_4.dir
+
+# All Build rule for target.
+CMakeFiles/test_4.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=17,18,19,20 "Built target test_4"
+.PHONY : CMakeFiles/test_4.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_4.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_4.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_4.dir/rule
+
+# Convenience name for target.
+test_4: CMakeFiles/test_4.dir/rule
+.PHONY : test_4
+
+# clean rule for target.
+CMakeFiles/test_4.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/clean
+.PHONY : CMakeFiles/test_4.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_5.dir
+
+# All Build rule for target.
+CMakeFiles/test_5.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/usuario/Mini-SGBD/build/CMakeFiles --progress-num=21,22,23,24 "Built target test_5"
+.PHONY : CMakeFiles/test_5.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_5.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_5.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_5.dir/rule
+
+# Convenience name for target.
+test_5: CMakeFiles/test_5.dir/rule
+.PHONY : test_5
+
+# clean rule for target.
+CMakeFiles/test_5.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/clean
+.PHONY : CMakeFiles/test_5.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
