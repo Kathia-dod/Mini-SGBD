@@ -220,6 +220,30 @@ test_5/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/build
 .PHONY : test_5/fast
 
+src/buffer/BufferManager.o: src/buffer/BufferManager.cpp.o
+.PHONY : src/buffer/BufferManager.o
+
+# target to build an object file
+src/buffer/BufferManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.o
+.PHONY : src/buffer/BufferManager.cpp.o
+
+src/buffer/BufferManager.i: src/buffer/BufferManager.cpp.i
+.PHONY : src/buffer/BufferManager.i
+
+# target to preprocess a source file
+src/buffer/BufferManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.i
+.PHONY : src/buffer/BufferManager.cpp.i
+
+src/buffer/BufferManager.s: src/buffer/BufferManager.cpp.s
+.PHONY : src/buffer/BufferManager.s
+
+# target to generate assembly for a file
+src/buffer/BufferManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.s
+.PHONY : src/buffer/BufferManager.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -518,6 +542,9 @@ help:
 	@echo "... test_5"
 	@echo "... test_disk"
 	@echo "... tests"
+	@echo "... src/buffer/BufferManager.o"
+	@echo "... src/buffer/BufferManager.i"
+	@echo "... src/buffer/BufferManager.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

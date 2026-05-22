@@ -12,7 +12,7 @@ set(STORAGE_SOURCES
 )
 
 set(BUFFER_SOURCES
-
+    src/buffer/BufferManager.cpp
 )
 
 add_executable(mini_sgbd

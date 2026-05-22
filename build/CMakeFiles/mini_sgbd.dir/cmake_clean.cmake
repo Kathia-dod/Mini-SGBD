@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.o"
+  "CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.o.d"
   "CMakeFiles/mini_sgbd.dir/src/main.cpp.o"
   "CMakeFiles/mini_sgbd.dir/src/main.cpp.o.d"
   "CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.o"
