@@ -20,9 +20,10 @@ Page* BufferManager::fetchPage(uint32_t page_id) {
         return &buffer_pool[frame_id].page;
     }
 
-    // busqueda de frame disponible
+       // busqueda de frame disponible
     for (size_t i = 0; i < pool_size; i++) {
 
+        // frame vacio
         if (!buffer_pool[i].occupied) {
 
             Page* page = storage_manager.fetchPage(page_id);
@@ -32,6 +33,28 @@ Page* BufferManager::fetchPage(uint32_t page_id) {
             buffer_pool[i].page_id = page_id;
 
             buffer_pool[i].occupied = true;
+
+            buffer_pool[i].pin_count = 1;
+
+            buffer_pool[i].dirty = false;
+
+            page_table[page_id] = i;
+
+            return &buffer_pool[i].page;
+        }
+
+        // frame reutilizable
+        if (buffer_pool[i].pin_count == 0) {
+
+            // borrar mapeo anter
+            page_table.erase(buffer_pool[i].page_id);
+
+            // cargar nueva pagina
+            Page* page = storage_manager.fetchPage(page_id);
+
+            buffer_pool[i].page = *page;
+
+            buffer_pool[i].page_id = page_id;
 
             buffer_pool[i].pin_count = 1;
 
