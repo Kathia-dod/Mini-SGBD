@@ -21,4 +21,7 @@ public:
 
     BufferManager(size_t pool_size,
                   StorageManager& storage_manager);
+
+    Page* fetchPage(uint32_t page_id);
+
 };
