@@ -1,8 +1,8 @@
 CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.o: \
- /home/usuario/Mini-SGBD/src/storage/DiskManager.cpp \
+ /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskManager.cpp \
  /usr/include/stdc-predef.h \
- /home/usuario/Mini-SGBD/src/storage/DiskManager.hpp \
- /home/usuario/Mini-SGBD/src/storage/common.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskManager.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/src/storage/common.hpp \
  /usr/include/c++/11/cstdint \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -23,7 +23,7 @@ CMakeFiles/mini_sgbd.dir/src/storage/DiskManager.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/usuario/Mini-SGBD/src/storage/DiskException.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskException.hpp \
  /usr/include/c++/11/stdexcept /usr/include/c++/11/exception \
  /usr/include/c++/11/bits/exception.h \
  /usr/include/c++/11/bits/exception_ptr.h \

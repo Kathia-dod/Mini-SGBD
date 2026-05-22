@@ -1,6 +1,6 @@
 CMakeFiles/tests.dir/tests/test_main.cpp.o: \
- /home/usuario/Mini-SGBD/tests/test_main.cpp /usr/include/stdc-predef.h \
- /usr/include/c++/11/iostream \
+ /home/ddd/BDREAL/Mini-SGBD/tests/test_main.cpp \
+ /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -148,8 +148,8 @@ CMakeFiles/tests.dir/tests/test_main.cpp.o: \
  /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/cassert \
  /usr/include/assert.h /usr/include/c++/11/cstring /usr/include/string.h \
  /usr/include/strings.h \
- /home/usuario/Mini-SGBD/tests/../src/storage/DiskManager.hpp \
- /home/usuario/Mini-SGBD/tests/../src/storage/common.hpp \
- /home/usuario/Mini-SGBD/tests/../src/storage/DiskException.hpp \
- /home/usuario/Mini-SGBD/tests/../src/storage/StorageManager.hpp \
- /home/usuario/Mini-SGBD/tests/../src/storage/Page.hpp
+ /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/DiskManager.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/common.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/DiskException.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/StorageManager.hpp \
+ /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/Page.hpp

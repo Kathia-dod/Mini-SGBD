@@ -11,9 +11,14 @@ set(STORAGE_SOURCES
     src/storage/StorageManager.cpp
 )
 
+set(BUFFER_SOURCES
+
+)
+
 add_executable(mini_sgbd
     src/main.cpp
     ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
 )
 
 add_executable(tests
