@@ -24,4 +24,5 @@ public:
 
     Page* fetchPage(uint32_t page_id);
 
+    bool unpinPage(uint32_t page_id, bool dirty);
 };

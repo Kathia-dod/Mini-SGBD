@@ -15,6 +15,8 @@ Page* BufferManager::fetchPage(uint32_t page_id) {
 
         uint32_t frame_id = page_table[page_id];
 
+        buffer_pool[frame_id].pin_count++;
+
         return &buffer_pool[frame_id].page;
     }
 
@@ -31,6 +33,10 @@ Page* BufferManager::fetchPage(uint32_t page_id) {
 
             buffer_pool[i].occupied = true;
 
+            buffer_pool[i].pin_count = 1;
+
+            buffer_pool[i].dirty = false;
+
             page_table[page_id] = i;
 
             return &buffer_pool[i].page;
@@ -38,4 +44,26 @@ Page* BufferManager::fetchPage(uint32_t page_id) {
     }
 
     return nullptr;
+}
+
+bool BufferManager::unpinPage(uint32_t page_id,
+                              bool dirty) {
+
+    if (page_table.find(page_id) == page_table.end()) {
+        return false;
+    }
+
+    uint32_t frame_id = page_table[page_id];
+
+    if (buffer_pool[frame_id].pin_count > 0) {
+
+        buffer_pool[frame_id].pin_count--;
+    }
+
+    if (dirty) {
+
+        buffer_pool[frame_id].dirty = true;
+    }
+
+    return true;
 }
