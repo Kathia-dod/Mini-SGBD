@@ -1,5 +1,5 @@
 CMakeFiles/mini_sgbd.dir/src/main.cpp.o: \
- /home/ddd/BDREAL/Mini-SGBD/src/main.cpp /usr/include/stdc-predef.h \
+ /home/usuario/Mini-SGBD/src/main.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -146,13 +146,13 @@ CMakeFiles/mini_sgbd.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/StorageManager.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskManager.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/common.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskException.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/Page.hpp \
- /usr/include/c++/11/cstring /usr/include/string.h /usr/include/strings.h \
- /home/ddd/BDREAL/Mini-SGBD/src/buffer/BufferManager.hpp \
+ /home/usuario/Mini-SGBD/src/storage/StorageManager.hpp \
+ /home/usuario/Mini-SGBD/src/storage/DiskManager.hpp \
+ /home/usuario/Mini-SGBD/src/storage/common.hpp \
+ /home/usuario/Mini-SGBD/src/storage/DiskException.hpp \
+ /home/usuario/Mini-SGBD/src/storage/Page.hpp /usr/include/c++/11/cstring \
+ /usr/include/string.h /usr/include/strings.h \
+ /home/usuario/Mini-SGBD/src/buffer/BufferManager.hpp \
  /usr/include/c++/11/vector /usr/include/c++/11/bits/stl_uninitialized.h \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
@@ -166,5 +166,8 @@ CMakeFiles/mini_sgbd.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/enable_special_members.h \
  /usr/include/c++/11/bits/node_handle.h \
  /usr/include/c++/11/bits/unordered_map.h \
- /usr/include/c++/11/bits/erase_if.h \
- /home/ddd/BDREAL/Mini-SGBD/src/buffer/Frame.hpp
+ /usr/include/c++/11/bits/erase_if.h /usr/include/c++/11/list \
+ /usr/include/c++/11/bits/stl_list.h \
+ /usr/include/c++/11/bits/allocated_ptr.h \
+ /usr/include/c++/11/bits/list.tcc \
+ /home/usuario/Mini-SGBD/src/buffer/Frame.hpp

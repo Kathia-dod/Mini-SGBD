@@ -31,7 +31,6 @@ add_executable(test_disk
     ${STORAGE_SOURCES}
 )
 
-#------------------TESTS-----------------------
 add_executable(test_1
     tests/test_disk_multipage.cpp
     ${STORAGE_SOURCES}
@@ -56,3 +55,10 @@ add_executable(test_5
     tests/test_end2end.cpp
     ${STORAGE_SOURCES}
 )
+
+add_executable(test_buffer_lru
+    tests/test_buffer_lru.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+)
+

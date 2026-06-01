@@ -6,6 +6,7 @@
 using namespace std;
 
 void testDiskManager() {
+    remove("test_s2.db");
     cout << "DiskManager\n";
 
     DiskManager dm("test_s2.db");
@@ -36,6 +37,7 @@ void testDiskManager() {
 }
 
 void testStorageManager() {
+    remove("test_s3.db");
     cout << "StorageManager + dirty bit\n";
 
     {
@@ -67,6 +69,8 @@ void testStorageManager() {
 }
 
 void testSlotDirectory() {
+    remove("test_s4a.db");
+    remove("test_s4b.db");
     cout << "Slot Directory\n";
 
     // layout inicial

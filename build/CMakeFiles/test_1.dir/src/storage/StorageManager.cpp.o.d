@@ -1,9 +1,9 @@
 CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.o: \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/StorageManager.cpp \
+ /home/usuario/Mini-SGBD/src/storage/StorageManager.cpp \
  /usr/include/stdc-predef.h \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/StorageManager.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskManager.hpp \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/common.hpp \
+ /home/usuario/Mini-SGBD/src/storage/StorageManager.hpp \
+ /home/usuario/Mini-SGBD/src/storage/DiskManager.hpp \
+ /home/usuario/Mini-SGBD/src/storage/common.hpp \
  /usr/include/c++/11/cstdint \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -24,7 +24,7 @@ CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/DiskException.hpp \
+ /home/usuario/Mini-SGBD/src/storage/DiskException.hpp \
  /usr/include/c++/11/stdexcept /usr/include/c++/11/exception \
  /usr/include/c++/11/bits/exception.h \
  /usr/include/c++/11/bits/exception_ptr.h \
@@ -136,8 +136,8 @@ CMakeFiles/test_1.dir/src/storage/StorageManager.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/11/bits/charconv.h \
  /usr/include/c++/11/bits/basic_string.tcc \
- /home/ddd/BDREAL/Mini-SGBD/src/storage/Page.hpp \
- /usr/include/c++/11/cstring /usr/include/string.h /usr/include/strings.h \
+ /home/usuario/Mini-SGBD/src/storage/Page.hpp /usr/include/c++/11/cstring \
+ /usr/include/string.h /usr/include/strings.h \
  /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
  /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
  /usr/include/c++/11/bits/locale_classes.h \

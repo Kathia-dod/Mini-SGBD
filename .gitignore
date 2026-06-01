@@ -1,0 +1,37 @@
+# Build
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Binarios compilados
+mini_sgbd
+tests
+test_disk
+test_1
+test_2
+test_3
+test_4
+test_5
+test_buffer_lru
+
+# Bases de datos generadas por los tests
+*.db
+*.bin
+
+# Archivos de debug
+*.dSYM/
+*.su
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

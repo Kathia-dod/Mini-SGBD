@@ -1,8 +1,7 @@
 CMakeFiles/test_disk.dir/tests/test_disk.cpp.o: \
- /home/ddd/BDREAL/Mini-SGBD/tests/test_disk.cpp \
- /usr/include/stdc-predef.h \
- /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/DiskManager.hpp \
- /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/common.hpp \
+ /home/usuario/Mini-SGBD/tests/test_disk.cpp /usr/include/stdc-predef.h \
+ /home/usuario/Mini-SGBD/tests/../src/storage/DiskManager.hpp \
+ /home/usuario/Mini-SGBD/tests/../src/storage/common.hpp \
  /usr/include/c++/11/cstdint \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -23,7 +22,7 @@ CMakeFiles/test_disk.dir/tests/test_disk.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/ddd/BDREAL/Mini-SGBD/tests/../src/storage/DiskException.hpp \
+ /home/usuario/Mini-SGBD/tests/../src/storage/DiskException.hpp \
  /usr/include/c++/11/stdexcept /usr/include/c++/11/exception \
  /usr/include/c++/11/bits/exception.h \
  /usr/include/c++/11/bits/exception_ptr.h \

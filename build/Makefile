@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ddd/BDREAL/Mini-SGBD
+CMAKE_SOURCE_DIR = /home/usuario/Mini-SGBD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ddd/BDREAL/Mini-SGBD/build
+CMAKE_BINARY_DIR = /home/usuario/Mini-SGBD/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ddd/BDREAL/Mini-SGBD/build/CMakeFiles /home/ddd/BDREAL/Mini-SGBD/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles /home/usuario/Mini-SGBD/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ddd/BDREAL/Mini-SGBD/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usuario/Mini-SGBD/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -220,12 +220,26 @@ test_5/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/build
 .PHONY : test_5/fast
 
+#=============================================================================
+# Target rules for targets named test_buffer_lru
+
+# Build rule for target.
+test_buffer_lru: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_buffer_lru
+.PHONY : test_buffer_lru
+
+# fast build rule for target.
+test_buffer_lru/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/build
+.PHONY : test_buffer_lru/fast
+
 src/buffer/BufferManager.o: src/buffer/BufferManager.cpp.o
 .PHONY : src/buffer/BufferManager.o
 
 # target to build an object file
 src/buffer/BufferManager.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/buffer/BufferManager.cpp.o
 .PHONY : src/buffer/BufferManager.cpp.o
 
 src/buffer/BufferManager.i: src/buffer/BufferManager.cpp.i
@@ -234,6 +248,7 @@ src/buffer/BufferManager.i: src/buffer/BufferManager.cpp.i
 # target to preprocess a source file
 src/buffer/BufferManager.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/buffer/BufferManager.cpp.i
 .PHONY : src/buffer/BufferManager.cpp.i
 
 src/buffer/BufferManager.s: src/buffer/BufferManager.cpp.s
@@ -242,6 +257,7 @@ src/buffer/BufferManager.s: src/buffer/BufferManager.cpp.s
 # target to generate assembly for a file
 src/buffer/BufferManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_sgbd.dir/build.make CMakeFiles/mini_sgbd.dir/src/buffer/BufferManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/buffer/BufferManager.cpp.s
 .PHONY : src/buffer/BufferManager.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -281,6 +297,7 @@ src/storage/DiskManager.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/DiskManager.cpp.o
 .PHONY : src/storage/DiskManager.cpp.o
 
 src/storage/DiskManager.i: src/storage/DiskManager.cpp.i
@@ -296,6 +313,7 @@ src/storage/DiskManager.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/DiskManager.cpp.i
 .PHONY : src/storage/DiskManager.cpp.i
 
 src/storage/DiskManager.s: src/storage/DiskManager.cpp.s
@@ -311,6 +329,7 @@ src/storage/DiskManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/DiskManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/DiskManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/DiskManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/DiskManager.cpp.s
 .PHONY : src/storage/DiskManager.cpp.s
 
 src/storage/StorageManager.o: src/storage/StorageManager.cpp.o
@@ -326,6 +345,7 @@ src/storage/StorageManager.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/StorageManager.cpp.o
 .PHONY : src/storage/StorageManager.cpp.o
 
 src/storage/StorageManager.i: src/storage/StorageManager.cpp.i
@@ -341,6 +361,7 @@ src/storage/StorageManager.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/StorageManager.cpp.i
 .PHONY : src/storage/StorageManager.cpp.i
 
 src/storage/StorageManager.s: src/storage/StorageManager.cpp.s
@@ -356,7 +377,32 @@ src/storage/StorageManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_3.dir/build.make CMakeFiles/test_3.dir/src/storage/StorageManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_4.dir/build.make CMakeFiles/test_4.dir/src/storage/StorageManager.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_5.dir/build.make CMakeFiles/test_5.dir/src/storage/StorageManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/src/storage/StorageManager.cpp.s
 .PHONY : src/storage/StorageManager.cpp.s
+
+tests/test_buffer_lru.o: tests/test_buffer_lru.cpp.o
+.PHONY : tests/test_buffer_lru.o
+
+# target to build an object file
+tests/test_buffer_lru.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/tests/test_buffer_lru.cpp.o
+.PHONY : tests/test_buffer_lru.cpp.o
+
+tests/test_buffer_lru.i: tests/test_buffer_lru.cpp.i
+.PHONY : tests/test_buffer_lru.i
+
+# target to preprocess a source file
+tests/test_buffer_lru.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/tests/test_buffer_lru.cpp.i
+.PHONY : tests/test_buffer_lru.cpp.i
+
+tests/test_buffer_lru.s: tests/test_buffer_lru.cpp.s
+.PHONY : tests/test_buffer_lru.s
+
+# target to generate assembly for a file
+tests/test_buffer_lru.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_buffer_lru.dir/build.make CMakeFiles/test_buffer_lru.dir/tests/test_buffer_lru.cpp.s
+.PHONY : tests/test_buffer_lru.cpp.s
 
 tests/test_disk.o: tests/test_disk.cpp.o
 .PHONY : tests/test_disk.o
@@ -540,6 +586,7 @@ help:
 	@echo "... test_3"
 	@echo "... test_4"
 	@echo "... test_5"
+	@echo "... test_buffer_lru"
 	@echo "... test_disk"
 	@echo "... tests"
 	@echo "... src/buffer/BufferManager.o"
@@ -554,6 +601,9 @@ help:
 	@echo "... src/storage/StorageManager.o"
 	@echo "... src/storage/StorageManager.i"
 	@echo "... src/storage/StorageManager.s"
+	@echo "... tests/test_buffer_lru.o"
+	@echo "... tests/test_buffer_lru.i"
+	@echo "... tests/test_buffer_lru.s"
 	@echo "... tests/test_disk.o"
 	@echo "... tests/test_disk.i"
 	@echo "... tests/test_disk.s"
