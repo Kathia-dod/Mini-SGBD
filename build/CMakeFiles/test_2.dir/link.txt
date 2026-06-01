@@ -1,1 +1,0 @@
-/usr/bin/c++  -Wall -Wextra -g CMakeFiles/test_2.dir/tests/test_storage_persist.cpp.o CMakeFiles/test_2.dir/src/storage/DiskManager.cpp.o CMakeFiles/test_2.dir/src/storage/StorageManager.cpp.o -o test_2 

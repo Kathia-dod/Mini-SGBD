@@ -1,1 +1,0 @@
-/usr/bin/c++  -Wall -Wextra -g CMakeFiles/test_disk.dir/tests/test_disk.cpp.o CMakeFiles/test_disk.dir/src/storage/DiskManager.cpp.o CMakeFiles/test_disk.dir/src/storage/StorageManager.cpp.o -o test_disk 
