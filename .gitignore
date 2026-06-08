@@ -8,7 +8,7 @@ cmake_install.cmake
 
 # Binarios compilados
 mini_sgbd
-tests
+
 test_disk
 test_1
 test_2
