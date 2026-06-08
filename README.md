@@ -26,6 +26,17 @@ make
 ```bash
 cd build
 ./tests
+./test_disk
+./test_1
+./test_2
+./test_3
+./test_4
+./test_5
+./test_buffer_lru
+```
+o
+```bash
+./tests && ./test_disk && ./test_1 && ./test_2 && ./test_3 && ./test_4 && ./test_5 && ./test_buffer_lru
 ```
 
 ---
