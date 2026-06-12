@@ -87,6 +87,21 @@ void BTreeIndex::insert(int key, int value) {
 // Busqueda basica
 bool BTreeIndex::search(int key, int& value) {
 
+    BLeafNode* leaf =
+        dynamic_cast<BLeafNode*>(root);
+
+    //  Simulacion de acceso mediante Buffer Manager
+    cout << "\n[BUFFER FETCH SEARCH] page="
+         << leaf->pageId
+         << endl;
+
+    //   Busqueda secuencial de clave
+    for(size_t i = 0; i < leaf->keys.size(); i++) {
+        if(leaf->keys[i] == key) {
+            value = leaf->values[i];
+            return true;
+        }
+    }
     return false;
 }
 
@@ -99,9 +114,7 @@ void BTreeIndex::printTree() {
     cout << "\nROOT LEAF NODE"
          << endl;
 
-    for(size_t i = 0;
-        i < leaf->keys.size();
-        i++) {
+    for(size_t i = 0; i < leaf->keys.size(); i++) {
 
         cout << "("
              << leaf->keys[i]
