@@ -93,6 +93,22 @@ bool BTreeIndex::search(int key, int& value) {
 // Mostrar estructura del arbol
 void BTreeIndex::printTree() {
 
-    cout << "ROOT NODE"
+    BLeafNode* leaf =
+        dynamic_cast<BLeafNode*>(root);
+
+    cout << "\nROOT LEAF NODE"
          << endl;
+
+    for(size_t i = 0;
+        i < leaf->keys.size();
+        i++) {
+
+        cout << "("
+             << leaf->keys[i]
+             << " -> "
+             << leaf->values[i]
+             << ") ";
+    }
+
+    cout << endl;
 }
