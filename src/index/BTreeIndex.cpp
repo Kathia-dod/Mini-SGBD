@@ -44,8 +44,7 @@ int BTreeIndex::getRootPageId() const {
 void BTreeIndex::insert(int key, int value) {
 
     // Obtener nodo hoja raiz
-    BLeafNode* leaf =
-        dynamic_cast<BLeafNode*>(root);
+    BLeafNode* leaf = dynamic_cast<BLeafNode*>(root);
 
     // Simulacion de acceso mediante  Buffer Manager
     cout << "\n[BUFFER FETCH] page="
@@ -55,9 +54,7 @@ void BTreeIndex::insert(int key, int value) {
     //  Insercion ordenada de claves
     int pos = 0;
 
-    while(pos < leaf->keys.size()
-          && leaf->keys[pos] < key) {
-
+    while(pos < leaf->keys.size() && leaf->keys[pos] < key) {
         pos++;
     }
 
@@ -78,6 +75,15 @@ void BTreeIndex::insert(int key, int value) {
          << " value="
          << value
          << endl;
+
+    // Validacion de overflow del nodo hoja
+    const int MAX_KEYS = 4;
+
+   if(leaf->numKeys > MAX_KEYS) {
+        cout << "\n[SPLIT NECESARIO] "
+            << "Nodo hoja lleno"
+            << endl;
+   }
 
     //  Simulacion de liberacion de pagina
     cout << "[UNPIN PAGE] dirty=true"
