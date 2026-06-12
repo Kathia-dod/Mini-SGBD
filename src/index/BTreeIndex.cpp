@@ -40,14 +40,47 @@ int BTreeIndex::getRootPageId() const {
     return rootPageId;
 }
 
-
-//Insercion basica
+// Insercion basica en nodo hoja raiz
 void BTreeIndex::insert(int key, int value) {
+
+    // Obtener nodo hoja raiz
+    BLeafNode* leaf =
+        dynamic_cast<BLeafNode*>(root);
+
+    // Simulacion de acceso mediante  Buffer Manager
+    cout << "\n[BUFFER FETCH] page="
+         << leaf->pageId
+         << endl;
+
+    //  Insercion ordenada de claves
+    int pos = 0;
+
+    while(pos < leaf->keys.size()
+          && leaf->keys[pos] < key) {
+
+        pos++;
+    }
+
+    leaf->keys.insert(
+        leaf->keys.begin() + pos,
+        key
+    );
+
+    leaf->values.insert(
+        leaf->values.begin() + pos,
+        value
+    );
+
+    leaf->numKeys++;
 
     cout << "[INSERT] key="
          << key
          << " value="
          << value
+         << endl;
+
+    //  Simulacion de liberacion de pagina
+    cout << "[UNPIN PAGE] dirty=true"
          << endl;
 }
 
