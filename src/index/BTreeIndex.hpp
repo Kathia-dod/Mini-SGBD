@@ -24,4 +24,14 @@ public:
     ~BTreeIndex();
 
     int getRootPageId() const;
+
+    
+    // Inserta una clave y valor en el arbol
+    void insert(int key, int value);
+
+    // Busca una clave dentro del arbol
+    bool search(int key, int& value);
+   
+    // Muestra la estructura actual del arbol
+    void printTree();
 };

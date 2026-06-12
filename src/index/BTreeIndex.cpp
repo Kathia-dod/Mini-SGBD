@@ -35,8 +35,31 @@ BTreeIndex::~BTreeIndex() {
 }
 
 //  Retorna pageId raiz
-
 int BTreeIndex::getRootPageId() const {
 
     return rootPageId;
+}
+
+
+//Insercion basica
+void BTreeIndex::insert(int key, int value) {
+
+    cout << "[INSERT] key="
+         << key
+         << " value="
+         << value
+         << endl;
+}
+
+// Busqueda basica
+bool BTreeIndex::search(int key, int& value) {
+
+    return false;
+}
+
+// Mostrar estructura del arbol
+void BTreeIndex::printTree() {
+
+    cout << "ROOT NODE"
+         << endl;
 }
