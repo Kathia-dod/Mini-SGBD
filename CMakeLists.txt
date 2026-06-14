@@ -15,6 +15,10 @@ set(BUFFER_SOURCES
     src/buffer/BufferManager.cpp
 )
 
+set(INDEX_SOURCES
+    src/index/BTreeIndex.cpp
+)
+
 add_executable(mini_sgbd
     src/main.cpp
     ${STORAGE_SOURCES}
@@ -62,3 +66,9 @@ add_executable(test_buffer_lru
     ${BUFFER_SOURCES}
 )
 
+add_executable(test_btreeindex
+    tests/test_btreeindex.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)

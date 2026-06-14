@@ -13,19 +13,20 @@ private:
     // Referencia al Buffer Manager
     BufferManager* bufferManager;
 
-    // Nodo raiz actual
-    BNode* root;
-
     // Identificador de pagina raiz
     int rootPageId;
+    
     // Helpers de I/O (Solo Lectura) 
     // Carga un nodo desde disco (lo deserializa). El llamador hace delete.
     BNode* loadNode(int pageId) const;
     BLeafNode* loadLeaf(int pageId) const;
     BInternalNode* loadInternal(int pageId) const;
+    
+    int allocPage();
 
     //Busqueda
     int findLeafPage(int pageId, int key) const;
+    void saveNode(BNode* node) const;
 
 public:
 
@@ -33,7 +34,7 @@ public:
     
     ~BTreeIndex();
 
-    int getRootPageId() const { return rootPageID; };
+    int getRootPageId() const { return rootPageId; };
 
     
     // Inserta una clave y valor en el arbol

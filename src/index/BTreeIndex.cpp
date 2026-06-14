@@ -1,23 +1,17 @@
 #include "BTreeIndex.hpp"
 
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 
 //constructor principal
-
 BTreeIndex::BTreeIndex(BufferManager* bm) {
-
     bufferManager = bm;
 
-    // Crear nodo hoja inicial
-    root = new BLeafNode();
-
-    // Solicitar nueva pagina al Buffer Manager
-    rootPageId = bufferManager->newPage();
-
-    // Asociar pageId al nodo raiz
-    root->pageId = rootPageId;
+    rootPageId = allocPage();
 
     cout << "B+ TREE INICIALIZADO"
          << endl;
@@ -29,30 +23,114 @@ BTreeIndex::BTreeIndex(BufferManager* bm) {
 }
 
 //destructor
-BTreeIndex::~BTreeIndex() {
+BTreeIndex::~BTreeIndex() {}
 
-    delete root;
+//Helpers de I/O
+
+BNode* BTreeIndex::loadNode(int pageId) const {
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(pageId));
+    if (!page) throw runtime_error("[BTree] fetchPage retornó nullptr para page " + to_string(pageId));
+
+    if (BNode::peekIsLeaf(page))
+        return BLeafNode::deserialize(page, pageId);
+    else
+        return BInternalNode::deserialize(page, pageId);
 }
 
-//  Retorna pageId raiz
-int BTreeIndex::getRootPageId() const {
+BLeafNode* BTreeIndex::loadLeaf(int pageId) const {
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(pageId));
+    if (!page) throw runtime_error("[BTree] fetchPage nullptr (hoja) page " + to_string(pageId));
 
-    return rootPageId;
+    auto* node = BLeafNode::deserialize(page, pageId);
+    bufferManager->unpinPage(static_cast<uint32_t>(pageId), false);
+    return node;
+}
+
+BInternalNode* BTreeIndex::loadInternal(int pageId) const {
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(pageId));
+    if (!page) throw runtime_error("[BTree] fetchPage nullptr (interno) page " + to_string(pageId));
+
+    auto* node = BInternalNode::deserialize(page, pageId);
+    bufferManager->unpinPage(static_cast<uint32_t>(pageId), false);
+    return node;
+}
+
+int BTreeIndex::allocPage() {
+    uint32_t pid;
+    Page* page = bufferManager->newPage(pid);
+    if (!page) throw runtime_error("[BTree] newPage falló");
+
+    // Inicializar la página como hoja vacía (isLeaf=1, numKeys=0)
+    BLeafNode tmp;
+    tmp.pageId = static_cast<int>(pid);
+    tmp.serialize(page);
+
+    bufferManager->unpinPage(pid, true); // true porque escribimos la estructura inicial
+    return static_cast<int>(pid);
+}
+
+// Busqueda y Navegacion 
+int BTreeIndex::findLeafPage(int pageId, int key) const {
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(pageId));
+    if (!page) throw runtime_error("[BTree] findLeafPage: fetchPage nullptr");
+
+    if (BNode::peekIsLeaf(page)) {
+        bufferManager->unpinPage(static_cast<uint32_t>(pageId), false);
+        return pageId; // Llegamos a la hoja
+    }
+
+    // Nodo interno: leer para navegar
+    BInternalNode* node = BInternalNode::deserialize(page, pageId);
+    bufferManager->unpinPage(static_cast<uint32_t>(pageId), false);
+
+    // Buscar el hijo correcto con upper_bound (primer elemento > key)
+    auto it = upper_bound(node->keys.begin(), node->keys.end(), key);
+    int idx = static_cast<int>(it - node->keys.begin());
+    int child = node->children[idx];
+
+    delete node; // Liberar memoria RAM del objeto deserializado
+    return findLeafPage(child, key); // Descenso recursivo
+}
+
+bool BTreeIndex::search(int key, int& value) const {
+    int leafPageId = findLeafPage(rootPageId, key);
+    BLeafNode* leaf = loadLeaf(leafPageId);
+
+    // Búsqueda binaria en la hoja
+    auto it = lower_bound(leaf->keys.begin(), leaf->keys.end(), key);
+    bool found = (it != leaf->keys.end() && *it == key);
+
+    if (found) {
+        int idx = static_cast<int>(it - leaf->keys.begin());
+        value = leaf->values[idx]; // Escribir en la variable de salida pasada por referencia
+    }
+
+    delete leaf; // Liberar memoria del nodo cargado
+    return found;
+}
+
+void BTreeIndex::saveNode(BNode* node) const {
+    uint32_t pid = static_cast<uint32_t>(node->pageId);
+    Page* page   = bufferManager->fetchPage(pid);
+    if (!page) throw runtime_error("[BTree] saveNode: fetchPage nullptr page " + to_string(pid));
+    node->serialize(page);
+    bufferManager->unpinPage(pid, true);
 }
 
 // Insercion basica en nodo hoja raiz
 void BTreeIndex::insert(int key, int value) {
-
+    
+    int leafPageId = findLeafPage(rootPageId, key); 
     // Obtener nodo hoja raiz
-    BLeafNode* leaf = dynamic_cast<BLeafNode*>(root);
+    BLeafNode* leaf = loadLeaf(leafPageId);
 
     // Simulacion de acceso mediante  Buffer Manager
-    cout << "\n[BUFFER FETCH] page="
+    cout << "\n[BUFFER FETCH] Cargando página hoja para inserción: id="
          << leaf->pageId
          << endl;
 
     //  Insercion ordenada de claves
-    int pos = 0;
+    size_t pos = 0;
 
     while(pos < leaf->keys.size() && leaf->keys[pos] < key) {
         pos++;
@@ -76,58 +154,55 @@ void BTreeIndex::insert(int key, int value) {
          << value
          << endl;
 
+    saveNode(leaf);
+    cout << "[BUFFER UNPIN] Guardado nodo hoja persistido con dirty=true" << endl;
     // Validacion de overflow del nodo hoja
     const int MAX_KEYS = 4;
 
-   if(leaf->numKeys > MAX_KEYS) {
+    if(leaf->numKeys > MAX_KEYS) {
         cout << "\n[SPLIT NECESARIO] "
             << "Nodo hoja lleno"
             << endl;
-   }
-
-    //  Simulacion de liberacion de pagina
-    cout << "[UNPIN PAGE] dirty=true"
-         << endl;
+    }
+    delete leaf;    
 }
 
-// Busqueda basica
-bool BTreeIndex::search(int key, int& value) {
+// Mostrar estructura del arbol (Implementación BFS Real sobre Disco)
+void BTreeIndex::printTree() const {
+    cout << "\nB+ TREE DUMP\n";
+    queue<int> q;
+    q.push(rootPageId);
 
-    BLeafNode* leaf =
-        dynamic_cast<BLeafNode*>(root);
+    while (!q.empty()) {
+        int currentId = q.front();
+        q.pop();
 
-    //  Simulacion de acceso mediante Buffer Manager
-    cout << "\n[BUFFER FETCH SEARCH] page="
-         << leaf->pageId
-         << endl;
+        Page* page = bufferManager->fetchPage(static_cast<uint32_t>(currentId));
+        if (!page) continue;
+        bool isLeaf = BNode::peekIsLeaf(page);
+        bufferManager->unpinPage(static_cast<uint32_t>(currentId), false);
 
-    //   Busqueda secuencial de clave
-    for(size_t i = 0; i < leaf->keys.size(); i++) {
-        if(leaf->keys[i] == key) {
-            value = leaf->values[i];
-            return true;
+        if (isLeaf) {
+            BLeafNode* leaf = loadLeaf(currentId);
+            cout << "  [Hoja Page " << currentId << "]: ";
+            for (size_t i = 0; i < leaf->keys.size(); ++i) {
+                cout << "(" << leaf->keys[i] << " -> " << leaf->values[i] << ") ";
+            }
+            cout << "\n";
+            delete leaf;
+        } else {
+            BInternalNode* internal = loadInternal(currentId);
+    
+            cout << "  [Interno Page " << currentId << "]: Claves: [ ";
+            for (int k : internal->keys) cout << k << " ";
+            cout << "] | Hijos Page: [ ";
+            
+            for (int childId : internal->children) {
+                cout << childId << " ";
+                q.push(childId);
+            }
+            cout << "]\n";
+            delete internal;
         }
     }
-    return false;
-}
-
-// Mostrar estructura del arbol
-void BTreeIndex::printTree() {
-
-    BLeafNode* leaf =
-        dynamic_cast<BLeafNode*>(root);
-
-    cout << "\nROOT LEAF NODE"
-         << endl;
-
-    for(size_t i = 0; i < leaf->keys.size(); i++) {
-
-        cout << "("
-             << leaf->keys[i]
-             << " -> "
-             << leaf->values[i]
-             << ") ";
-    }
-
-    cout << endl;
 }
