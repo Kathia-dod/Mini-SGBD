@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cassert>
 #include "../src/index/BTreeIndex.hpp"
 
 #include "../src/storage/StorageManager.hpp"
@@ -12,6 +12,21 @@ void separador() {
 
     cout << "\n------------------------------"
          << endl;
+}
+
+void checkFound(BTreeIndex& tree, int key, int expectedValue) {
+    int value = -1;
+    bool found = tree.search(key, value);
+    assert(found && "Clave deberia existir");
+    assert(value == expectedValue && "Valor incorrecto");
+    cout << "[OK] search(" << key << ") = " << value << endl;
+}
+
+void checkNotFound(BTreeIndex& tree, int key) {
+    int value = -1;
+    bool found = tree.search(key, value);
+    assert(!found && "Clave NO deberia existir");
+    cout << "[OK] search(" << key << ") = NOT FOUND" << endl;
 }
 
 int main() {
@@ -66,23 +81,6 @@ int main() {
 
     separador();
 
-   //search tree
-
-    int value;
-
-    cout << "\nVALIDACION BASICA DE BUSQUEDA:"<< endl;
-
-    if(tree.search(15, value)) {
-        cout << "[OK] Clave 15 encontrada"<< endl;
-        cout << "Valor: " << value << endl;
-    }
-
-    if(!tree.search(99, value)) {
-        cout << "[OK] Clave inexistente detectada" << endl;
-    }
-
-    separador();
-
     //validacion
 
     cout << "\nVALIDACION SEMANA 9:" << endl;
@@ -94,6 +92,43 @@ int main() {
     cout << "[OK] Deteccion de overflow" << endl;
     cout << "\n[-]split pendiente" << endl;
     separador();
+
+    //search tree
+    //  BUSQUEDA: claves existentes
+    cout << "\nBUSQUEDA - CLAVES EXISTENTES:" << endl;
+    checkFound(tree, 5,  50);
+    checkFound(tree, 10, 100);
+    checkFound(tree, 15, 150);
+    checkFound(tree, 20, 200);
+    checkFound(tree, 25, 250);
+
+    separador();
+
+    //  BUSQUEDA: claves inexistentes
+    cout << "\nBUSQUEDA - CLAVES INEXISTENTES:" << endl;
+    checkNotFound(tree, 1);    // menor que todo
+    checkNotFound(tree, 7);    // entre claves existentes
+    checkNotFound(tree, 99);   // mayor que todo
+    checkNotFound(tree, 12);   // entre 10 y 15
+
+    separador();
+
+    //  BUSQUEDA: bordes
+    cout << "\nBUSQUEDA - CASOS BORDE:" << endl;
+    checkFound(tree, 5,  50);   // primera clave insertada
+    checkFound(tree, 25, 250);  // ultima clave insertada
+    checkNotFound(tree, 4);     // justo antes del minimo
+    checkNotFound(tree, 26);    // justo despues del maximo
+
+    separador();
+
+    //validacion Semana 10
+    cout << "\nVALIDACION SEMANA 10:" << endl;
+    cout << "[OK] Busqueda de claves existentes" << endl;
+    cout << "[OK] Busqueda de claves inexistentes" << endl;
+    cout << "[OK] Casos borde (minimo, maximo, fuera de rango)" << endl;
+    separador();
+
 
     return 0;
 }
