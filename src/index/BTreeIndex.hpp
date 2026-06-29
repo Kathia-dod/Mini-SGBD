@@ -14,28 +14,33 @@ private:
     BufferManager* bufferManager;
 
     // Identificador de pagina raiz
-    int rootPageId;
+    int rootPageId_;
     
     // Helpers de I/O (Solo Lectura) 
     // Carga un nodo desde disco (lo deserializa). El llamador hace delete.
     BNode* loadNode(int pageId) const;
     BLeafNode* loadLeaf(int pageId) const;
     BInternalNode* loadInternal(int pageId) const;
-    
+    void saveNode(BNode* node) const;
+
     int allocPage();
 
     //Busqueda
     int findLeafPage(int pageId, int key) const;
-    void saveNode(BNode* node) const;
+
+    struct InsertResult {
+        int promoted = -1;
+        int newChildPageId = -1;
+    };
+
+    InsertResult insertRec(int pageId, int key, int value);
+    InsertResult splitLeaf(BLeafNode* leaf, int key, int value);    InsertResult splitInternal(BInternalNode* node, int promoted, int newChildPageId);
 
 public:
 
     explicit BTreeIndex(BufferManager* bm);
     
     ~BTreeIndex();
-
-    int getRootPageId() const { return rootPageId; };
-
     
     // Inserta una clave y valor en el arbol
     void insert(int key, int value);
@@ -45,4 +50,6 @@ public:
    
     // Muestra la estructura actual del arbol
     void printTree() const;
+
+    int getRootPageId() const { return rootPageId_; };
 };
