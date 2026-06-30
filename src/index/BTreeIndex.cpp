@@ -403,10 +403,216 @@ BTreeIndex::RemoveResult BTreeIndex::removeRec(int pageId, int key) {
     return { myUnderflow };
 }
 
-// Stubs temporales
-bool BTreeIndex::fixUnderflow(BInternalNode*, int) { return false; }
-void BTreeIndex::mergeChildren(BInternalNode*, int) {}
-void BTreeIndex::borrowFromLeft(BInternalNode*, int) {}
-void BTreeIndex::borrowFromRight(BInternalNode*, int) {}
+bool BTreeIndex::fixUnderflow(BInternalNode* parent, int childIdx) {
+    if (childIdx > 0) {
+        int leftSiblingPage = parent->children[childIdx - 1];
+        Page* sibPage = bufferManager->fetchPage(static_cast<uint32_t>(leftSiblingPage));
+        if (!sibPage) throw runtime_error("[BTree] fixUnderflow: fetchPage nullptr");
+        bool sibIsLeaf = BNode::peekIsLeaf(sibPage);
+        int  sibKeys   = BNode::peekNumKeys(sibPage);
+        bufferManager->unpinPage(static_cast<uint32_t>(leftSiblingPage), false);
+        if (sibKeys > BTREE_MIN) {
+            (void)sibIsLeaf;
+            borrowFromLeft(parent, childIdx);
+            return false;
+        }
+    }
+
+    if (childIdx < static_cast<int>(parent->children.size()) - 1) {
+        int rightSiblingPage = parent->children[childIdx + 1];
+        Page* sibPage = bufferManager->fetchPage(static_cast<uint32_t>(rightSiblingPage));
+        if (!sibPage) throw runtime_error("[BTree] fixUnderflow: fetchPage nullptr");
+        bool sibIsLeaf = BNode::peekIsLeaf(sibPage);
+        int  sibKeys   = BNode::peekNumKeys(sibPage);
+        bufferManager->unpinPage(static_cast<uint32_t>(rightSiblingPage), false);
+        if (sibKeys > BTREE_MIN) {
+            (void)sibIsLeaf;
+            borrowFromRight(parent, childIdx);
+            return false;
+        }
+    }
+
+    if (childIdx > 0)
+        mergeChildren(parent, childIdx - 1);
+    else
+        mergeChildren(parent, childIdx);
+    return true;
+}
+
+void BTreeIndex::borrowFromLeft(BInternalNode* parent, int childIdx) {
+    int leftPage  = parent->children[childIdx - 1];
+    int childPage = parent->children[childIdx];
+
+    Page* p = bufferManager->fetchPage(static_cast<uint32_t>(childPage));
+    if (!p) throw runtime_error("[BTree] borrowFromLeft: fetchPage nullptr child");
+    bool isLeaf = BNode::peekIsLeaf(p);
+    bufferManager->unpinPage(static_cast<uint32_t>(childPage), false);
+
+    if (isLeaf) {
+        BLeafNode* leftLeaf  = loadLeaf(leftPage);
+        BLeafNode* childLeaf = loadLeaf(childPage);
+
+        int borrowedKey = leftLeaf->keys.back();
+        int borrowedVal = leftLeaf->values.back();
+        leftLeaf->keys.pop_back();
+        leftLeaf->values.pop_back();
+        leftLeaf->numKeys--;
+
+        childLeaf->keys.insert(childLeaf->keys.begin(), borrowedKey);
+        childLeaf->values.insert(childLeaf->values.begin(), borrowedVal);
+        childLeaf->numKeys++;
+
+        parent->keys[childIdx - 1] = childLeaf->keys[0];
+
+        saveNode(leftLeaf);
+        saveNode(childLeaf);
+        cout << "[BTree] borrowFromLeft (hoja): clave " << borrowedKey
+             << " movida de page " << leftPage << " a page " << childPage << "\n";
+        delete leftLeaf;
+        delete childLeaf;
+    } else {
+        BInternalNode* leftNode  = loadInternal(leftPage);
+        BInternalNode* childNode = loadInternal(childPage);
+
+        int sepKey = parent->keys[childIdx - 1];
+        childNode->keys.insert(childNode->keys.begin(), sepKey);
+        childNode->numKeys++;
+
+        int migratedChild = leftNode->children.back();
+        leftNode->children.pop_back();
+        childNode->children.insert(childNode->children.begin(), migratedChild);
+
+        parent->keys[childIdx - 1] = leftNode->keys.back();
+        leftNode->keys.pop_back();
+        leftNode->numKeys--;
+
+        saveNode(leftNode);
+        saveNode(childNode);
+        cout << "[BTree] borrowFromLeft (interno): sep " << sepKey
+             << " baja a page " << childPage << "\n";
+        delete leftNode;
+        delete childNode;
+    }
+}
+
+void BTreeIndex::borrowFromRight(BInternalNode* parent, int childIdx) {
+    int childPage = parent->children[childIdx];
+    int rightPage = parent->children[childIdx + 1];
+
+    Page* p = bufferManager->fetchPage(static_cast<uint32_t>(childPage));
+    if (!p) throw runtime_error("[BTree] borrowFromRight: fetchPage nullptr child");
+    bool isLeaf = BNode::peekIsLeaf(p);
+    bufferManager->unpinPage(static_cast<uint32_t>(childPage), false);
+
+    if (isLeaf) {
+        BLeafNode* childLeaf = loadLeaf(childPage);
+        BLeafNode* rightLeaf = loadLeaf(rightPage);
+
+        int borrowedKey = rightLeaf->keys.front();
+        int borrowedVal = rightLeaf->values.front();
+        rightLeaf->keys.erase(rightLeaf->keys.begin());
+        rightLeaf->values.erase(rightLeaf->values.begin());
+        rightLeaf->numKeys--;
+
+        childLeaf->keys.push_back(borrowedKey);
+        childLeaf->values.push_back(borrowedVal);
+        childLeaf->numKeys++;
+
+        parent->keys[childIdx] = rightLeaf->keys[0];
+
+        saveNode(childLeaf);
+        saveNode(rightLeaf);
+        cout << "[BTree] borrowFromRight (hoja): clave " << borrowedKey
+             << " movida de page " << rightPage << " a page " << childPage << "\n";
+        delete childLeaf;
+        delete rightLeaf;
+    } else {
+        BInternalNode* childNode = loadInternal(childPage);
+        BInternalNode* rightNode = loadInternal(rightPage);
+
+        int sepKey = parent->keys[childIdx];
+        childNode->keys.push_back(sepKey);
+        childNode->numKeys++;
+
+        int migratedChild = rightNode->children.front();
+        rightNode->children.erase(rightNode->children.begin());
+        childNode->children.push_back(migratedChild);
+
+        parent->keys[childIdx] = rightNode->keys.front();
+        rightNode->keys.erase(rightNode->keys.begin());
+        rightNode->numKeys--;
+
+        saveNode(childNode);
+        saveNode(rightNode);
+        cout << "[BTree] borrowFromRight (interno): sep " << sepKey
+             << " baja a page " << childPage << "\n";
+        delete childNode;
+        delete rightNode;
+    }
+}
+
+void BTreeIndex::mergeChildren(BInternalNode* parent, int childIdx) {
+    int leftPage  = parent->children[childIdx];
+    int rightPage = parent->children[childIdx + 1];
+
+    Page* p = bufferManager->fetchPage(static_cast<uint32_t>(leftPage));
+    if (!p) throw runtime_error("[BTree] mergeChildren: fetchPage nullptr left");
+    bool isLeaf = BNode::peekIsLeaf(p);
+    bufferManager->unpinPage(static_cast<uint32_t>(leftPage), false);
+
+    if (isLeaf) {
+        BLeafNode* leftLeaf  = loadLeaf(leftPage);
+        BLeafNode* rightLeaf = loadLeaf(rightPage);
+
+        for (int i = 0; i < rightLeaf->numKeys; i++) {
+            leftLeaf->keys.push_back(rightLeaf->keys[i]);
+            leftLeaf->values.push_back(rightLeaf->values[i]);
+            leftLeaf->numKeys++;
+        }
+        leftLeaf->nextLeaf = rightLeaf->nextLeaf;
+
+        saveNode(leftLeaf);
+        rightLeaf->keys.clear();
+        rightLeaf->values.clear();
+        rightLeaf->numKeys = 0;
+        saveNode(rightLeaf);
+
+        cout << "[BTree] merge (hoja): page " << rightPage
+             << " fusionada en page " << leftPage << "\n";
+        delete leftLeaf;
+        delete rightLeaf;
+    } else {
+        BInternalNode* leftNode  = loadInternal(leftPage);
+        BInternalNode* rightNode = loadInternal(rightPage);
+
+        int sepKey = parent->keys[childIdx];
+        leftNode->keys.push_back(sepKey);
+        leftNode->numKeys++;
+
+        for (int i = 0; i < rightNode->numKeys; i++) {
+            leftNode->keys.push_back(rightNode->keys[i]);
+            leftNode->numKeys++;
+        }
+        for (int child : rightNode->children)
+            leftNode->children.push_back(child);
+
+        saveNode(leftNode);
+        rightNode->keys.clear();
+        rightNode->children.clear();
+        rightNode->numKeys = 0;
+        saveNode(rightNode);
+
+        cout << "[BTree] merge (interno): page " << rightPage
+             << " fusionada en page " << leftPage
+             << " (sep " << sepKey << " bajó del padre)\n";
+        delete leftNode;
+        delete rightNode;
+    }
+
+    parent->keys.erase(    parent->keys.begin()     + childIdx);
+    parent->children.erase(parent->children.begin() + childIdx + 1);
+    parent->numKeys--;
+}
+
 
 
