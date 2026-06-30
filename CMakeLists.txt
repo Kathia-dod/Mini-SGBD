@@ -72,3 +72,10 @@ add_executable(test_btreeindex
     ${BUFFER_SOURCES}
     ${INDEX_SOURCES}
 )
+
+add_executable(test_btree_delete
+    tests/test_btree_delete.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
