@@ -36,6 +36,19 @@ private:
     InsertResult insertRec(int pageId, int key, int value);
     InsertResult splitLeaf(BLeafNode* leaf, int key, int value);    InsertResult splitInternal(BInternalNode* node, int promoted, int newChildPageId);
 
+    // Mínimo de claves permitido en un nodo no-raíz: ceil(ORDER / 2)
+    static const int BTREE_MIN = (BTREE_ORDER + 1) / 2;   
+
+    struct RemoveResult {
+        bool underflow = false; 
+    };
+
+    RemoveResult removeRec(int pageId, int key);
+    bool fixUnderflow(BInternalNode* parent, int childIdx);
+    void mergeChildren(BInternalNode* parent, int childIdx);
+    void borrowFromLeft(BInternalNode* parent, int childIdx);
+    void borrowFromRight(BInternalNode* parent, int childIdx);
+
 public:
 
     explicit BTreeIndex(BufferManager* bm);
@@ -52,4 +65,6 @@ public:
     void printTree() const;
 
     int getRootPageId() const { return rootPageId_; };
+
+    void remove(int key);
 };
