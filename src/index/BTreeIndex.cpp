@@ -324,4 +324,89 @@ void BTreeIndex::printTree() const {
     cout << "\n--------------------------------------------\n\n";
 }
 
+// Eliminación en B+ Tree
+
+void BTreeIndex::remove(int key) {
+    removeRec(rootPageId_, key);
+
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(rootPageId_));
+    if (!page) return;
+
+    bool rootIsLeaf = BNode::peekIsLeaf(page);
+    bufferManager->unpinPage(static_cast<uint32_t>(rootPageId_), false);
+
+    if (!rootIsLeaf) {
+        BInternalNode* root = loadInternal(rootPageId_);
+        if (root->numKeys == 0 && !root->children.empty()) {
+            int oldRoot = rootPageId_;
+            rootPageId_ = root->children[0];
+            cout << "[BTree] Raíz reducida: page " << oldRoot
+                 << " → nueva raíz page " << rootPageId_ << "\n";
+        }
+        delete root;
+    }
+}
+
+BTreeIndex::RemoveResult BTreeIndex::removeRec(int pageId, int key) {
+    Page* page = bufferManager->fetchPage(static_cast<uint32_t>(pageId));
+    if (!page) throw runtime_error("[BTree] removeRec: fetchPage nullptr page "
+                                    + to_string(pageId));
+    bool isLeaf = BNode::peekIsLeaf(page);
+    bufferManager->unpinPage(static_cast<uint32_t>(pageId), false);
+
+    if (isLeaf) {
+        BLeafNode* leaf = loadLeaf(pageId);
+
+        auto it = lower_bound(leaf->keys.begin(), leaf->keys.end(), key);
+        bool found = (it != leaf->keys.end() && *it == key);
+
+        if (!found) {
+            cout << "[BTree] remove: clave " << key << " no encontrada\n";
+            delete leaf;
+            return { false };
+        }
+
+        int idx = static_cast<int>(it - leaf->keys.begin());
+        leaf->keys.erase(  leaf->keys.begin()   + idx);
+        leaf->values.erase(leaf->values.begin() + idx);
+        leaf->numKeys--;
+
+        saveNode(leaf);
+
+        cout << "[BTree] remove: clave " << key
+             << " eliminada de hoja page " << pageId
+             << " (numKeys restantes: " << leaf->numKeys << ")\n";
+
+        bool underflow = (leaf->numKeys < BTREE_MIN) && (pageId != rootPageId_);
+        delete leaf;
+        return { underflow };
+    }
+
+    BInternalNode* node = loadInternal(pageId);
+
+    auto it  = upper_bound(node->keys.begin(), node->keys.end(), key);
+    int  idx = static_cast<int>(it - node->keys.begin());
+    int  child = node->children[idx];
+
+    RemoveResult childRes = removeRec(child, key);
+
+    if (!childRes.underflow) {
+        delete node;
+        return { false };
+    }
+
+    bool parentUnderflow = fixUnderflow(node, idx);
+    saveNode(node);
+
+    bool myUnderflow = parentUnderflow && (pageId != rootPageId_);
+    delete node;
+    return { myUnderflow };
+}
+
+// Stubs temporales
+bool BTreeIndex::fixUnderflow(BInternalNode*, int) { return false; }
+void BTreeIndex::mergeChildren(BInternalNode*, int) {}
+void BTreeIndex::borrowFromLeft(BInternalNode*, int) {}
+void BTreeIndex::borrowFromRight(BInternalNode*, int) {}
+
 
