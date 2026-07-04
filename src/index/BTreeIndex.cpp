@@ -11,17 +11,30 @@ using namespace std;
 BTreeIndex::BTreeIndex(BufferManager* bm) {
     bufferManager = bm;
 
-    rootPageId_ = allocPage();
+    // recuperar raíz desde disco
+    rootPageId_ = bufferManager->getStorageManager().getRootPageId();
 
-    cout << "B+ TREE INICIALIZADO"
-         << endl;
-    BLeafNode root;
-    root.pageId = rootPageId_;
-    saveNode(&root);
-    cout << "ROOT PAGE ID: "
-         << rootPageId_
-         << endl;
+    if (rootPageId_ == 0) {
+        // si no existe arbol -> crear nuevo
+        rootPageId_ = allocPage();
+
+        BLeafNode root;
+        root.pageId = rootPageId_;
+        saveNode(&root);
+
+        bufferManager->getStorageManager().setRootPageId(rootPageId_);
+
+        cout << "B+ TREE CREADO" << endl;
+        cout << "ROOT PAGE ID: " << rootPageId_ << endl;
+
+    } else {
+        // si existe -> recuperar 
+
+        cout << "B+ TREE RECUPERADO DESDE DISCO" << endl;
+        cout << "ROOT PAGE ID: " << rootPageId_ << endl;
+    }
 }
+
 
 //destructor
 BTreeIndex::~BTreeIndex() {}
