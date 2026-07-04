@@ -35,7 +35,8 @@ public:
     uint64_t getHits()   const { return hits_; }
     uint64_t getMisses() const { return misses_; }
     size_t   getPoolSize() const { return pool_size_; }
- 
+    
+    StorageManager& getStorageManager() { return storage_manager_; }
 private:
     size_t  pool_size_;
     StorageManager& storage_manager_;

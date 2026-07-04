@@ -93,3 +93,25 @@ void StorageManager::loadMeta() {
     if (next_page_id_ == 0 || next_page_id_ > MAX_PAGES)
         next_page_id_ = 1;
 }
+/// métodos para persistir y recuperar el rootPageId del B+ Tree
+void StorageManager::setRootPageId(uint32_t rootPageId) {
+    Page* meta = &pages_[META_PAGE_ID];
+
+    memcpy(meta->data + PAGE_HEADER_SIZE + sizeof(uint32_t),
+           &rootPageId,
+           sizeof(uint32_t));
+
+    meta->dirty = true;
+    disk_.writePage(META_PAGE_ID, meta->data);
+    meta->dirty = false;
+}
+
+uint32_t StorageManager::getRootPageId() const {
+    uint32_t rootPageId = 0;
+
+    memcpy(&rootPageId,
+           pages_[META_PAGE_ID].data + PAGE_HEADER_SIZE + sizeof(uint32_t),
+           sizeof(uint32_t));
+
+    return rootPageId;
+}

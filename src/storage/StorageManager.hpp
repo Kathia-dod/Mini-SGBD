@@ -29,6 +29,9 @@ public:
  
     uint32_t getNumPages() const { return next_page_id_; }
 
+    void setRootPageId(uint32_t rootPageId);
+    uint32_t getRootPageId() const;
+
 private:
     DiskManager disk_;
     Page pages_[MAX_PAGES];
