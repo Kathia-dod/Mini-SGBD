@@ -7,32 +7,30 @@
 
 using namespace std;
 
-//constructor principal
+//constructor 
 BTreeIndex::BTreeIndex(BufferManager* bm) {
     bufferManager = bm;
 
-    // recuperar raíz desde disco
+    // Recuperar la raíz almacenada en disco
     rootPageId_ = bufferManager->getStorageManager().getRootPageId();
 
     if (rootPageId_ == 0) {
-        // si no existe arbol -> crear nuevo
+        // No existe árbol, crear uno nuevo
         rootPageId_ = allocPage();
 
         BLeafNode root;
         root.pageId = rootPageId_;
         saveNode(&root);
 
+        // Guardar la raíz en el StorageManager
         bufferManager->getStorageManager().setRootPageId(rootPageId_);
 
         cout << "B+ TREE CREADO" << endl;
-        cout << "ROOT PAGE ID: " << rootPageId_ << endl;
-
     } else {
-        // si existe -> recuperar 
-
         cout << "B+ TREE RECUPERADO DESDE DISCO" << endl;
-        cout << "ROOT PAGE ID: " << rootPageId_ << endl;
     }
+
+    cout << "ROOT PAGE ID: " << rootPageId_ << endl;
 }
 
 
@@ -145,11 +143,14 @@ void BTreeIndex::insert(int key, int value) {
         newRoot.children.push_back(res.newChildPageId);
         newRoot.numKeys = 1;
 
-        saveNode(&newRoot);
+       saveNode(&newRoot);
+
         rootPageId_ = newRootPageId;
 
+        bufferManager->getStorageManager().setRootPageId(rootPageId_);
+
         cout << "[BTree] Nueva raíz en page " << rootPageId_
-             << " (clave promovida: " << res.promoted << ")\n";
+        << " (clave promovida: " << res.promoted << ")\n";
     }
 }
 
@@ -353,6 +354,7 @@ void BTreeIndex::remove(int key) {
         if (root->numKeys == 0 && !root->children.empty()) {
             int oldRoot = rootPageId_;
             rootPageId_ = root->children[0];
+            bufferManager->getStorageManager().setRootPageId(rootPageId_);
             cout << "[BTree] Raíz reducida: page " << oldRoot
                  << " → nueva raíz page " << rootPageId_ << "\n";
         }

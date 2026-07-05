@@ -79,3 +79,10 @@ add_executable(test_btree_delete
     ${BUFFER_SOURCES}
     ${INDEX_SOURCES}
 )
+
+add_executable(test_persistencia
+    tests/test_persistencia.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
