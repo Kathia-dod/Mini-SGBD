@@ -92,3 +92,9 @@ add_executable(test_query_scan
     ${STORAGE_SOURCES}
     ${BUFFER_SOURCES}
 )
+
+add_executable(test_csv_load
+    tests/test_csv_load.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+)
