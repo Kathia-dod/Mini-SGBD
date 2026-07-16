@@ -102,6 +102,14 @@ add_executable(test_csv_load
     tests/test_csv_load.cpp
     ${STORAGE_SOURCES}
     ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
+
+add_executable(test_query_index
+    tests/test_query_index.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
 )
 
 add_executable(test_query_join

@@ -3,10 +3,13 @@
 #include <fstream>
 #include <iostream>
 #include "../buffer/BufferManager.hpp"
+#include "../index/BTreeIndex.hpp"
+#include "Tuple.hpp"
+
 
 class CsvLoader {
 public:
-    static int load(const std::string& csvPath, BufferManager& bm) {
+    static int load(const std::string& csvPath, BufferManager& bm, BTreeIndex* index = nullptr) {
         std::ifstream file(csvPath);
         if (!file.is_open()) {
             std::cerr << "[CsvLoader] No se pudo abrir " << csvPath << "\n";
@@ -39,6 +42,19 @@ public:
                 continue;
             }
             inserted++;
+
+            if (index != nullptr) {
+                Tuple tuple = Tuple::deserialize(
+                    line.c_str(),
+                    static_cast<uint16_t>(line.size())
+                );
+
+                int edad = std::stoi(tuple.values[1]);
+
+                int rid = static_cast<int>(pageId * 1000 + slot);
+
+                index->insert(edad, rid);
+            }
         }
         bm.unpinPage(pageId, true);
         std::cout << "[CsvLoader] " << inserted << " registros cargados desde " << csvPath << "\n";
