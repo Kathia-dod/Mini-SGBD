@@ -19,6 +19,10 @@ set(INDEX_SOURCES
     src/index/BTreeIndex.cpp
 )
 
+set(QUERY_SOURCES
+    src/query/JoinOperator.cpp
+)
+
 add_executable(mini_sgbd
     src/main.cpp
     ${STORAGE_SOURCES}
@@ -91,6 +95,7 @@ add_executable(test_query_scan
     tests/test_query_scan.cpp
     ${STORAGE_SOURCES}
     ${BUFFER_SOURCES}
+    ${QUERY_SOURCES}
 )
 
 add_executable(test_csv_load
