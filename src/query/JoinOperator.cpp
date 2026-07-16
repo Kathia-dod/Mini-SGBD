@@ -69,9 +69,12 @@ bool JoinOperator::next(Tuple& tuple) {
 void JoinOperator::close() {
     left_->close();
     right_->close();
+    Operator::close();
 }
 
 void JoinOperator::explain(std::ostream& os, int depth) const {
-    (void)depth;
-    os << "Join\n";
+    os << std::string(depth * 2, ' ')
+       << "Nested Loop Join"
+       << " -> tuplas: " << tuplesProduced_
+       << ", tiempo: " << elapsedMs() << "ms\n";
 }
