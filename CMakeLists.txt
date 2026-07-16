@@ -112,7 +112,17 @@ add_executable(test_query_index
     ${INDEX_SOURCES}
 )
 
+add_executable(test_index_scan
+    tests/test_index_scan.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
+
 add_executable(test_query_join
     tests/test_query_join.cpp
-    src/query/JoinOperator.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+    ${QUERY_SOURCES}
 )

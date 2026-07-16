@@ -1,63 +1,65 @@
+#include "../src/storage/StorageManager.hpp"
+#include "../src/buffer/BufferManager.hpp"
+#include "../src/query/CsvLoader.hpp"
+#include "../src/query/ScanOperator.hpp"
 #include "../src/query/JoinOperator.hpp"
+
 #include <cassert>
+#include <cstdio>
 #include <iostream>
-
-class MockOperator : public Operator {
-private:
-    std::vector<Tuple> tuples_;
-    size_t index_ = 0;
-
-public:
-    MockOperator(std::vector<Tuple> tuples)
-        : tuples_(std::move(tuples)) {}
-
-    void open() override {
-        Operator::open();
-        index_ = 0;
-    }
-
-    bool next(Tuple& out) override {
-        if (index_ >= tuples_.size())
-            return false;
-
-        out = tuples_[index_++];
-        tuplesProduced_++;
-        return true;
-    }
-
-    void close() override {
-        Operator::close();
-    }
-
-    std::string name() const override {
-        return "Mock";
-    }
-
-    void explain(std::ostream& out, int depth = 0) const override {
-        out << std::string(depth * 2, ' ')
-            << "Mock\n";
-    }
-};
 
 int main() {
 
-    Tuple a1;
-    a1.values = {"1", "Juan"};
+    std::remove("join_personas.bin");
+    std::remove("join_ciudades.bin");
 
-    Tuple a2;
-    a2.values = {"2", "Maria"};
+    // RELACION PERSONAS
 
-    Tuple b1;
-    b1.values = {"1", "Lima"};
+    StorageManager smPersonas("join_personas.bin");
+    BufferManager bmPersonas(5, smPersonas);
 
-    Tuple b2;
-    b2.values = {"2", "Arequipa"};
+    int personas = CsvLoader::load(
+        "data/datos1.csv",
+        bmPersonas
+    );
+
+    assert(personas > 0);
+
+    // RELACION CIUDADES
+
+    StorageManager smCiudades("join_ciudades.bin");
+    BufferManager bmCiudades(5, smCiudades);
+
+    int ciudades = CsvLoader::load(
+        "data/ciudades.csv",
+        bmCiudades
+    );
+
+    assert(ciudades > 0);
+
+
+    // NESTED LOOP JOIN
 
     Operator* join = new JoinOperator(
-        new MockOperator({a1, a2}),
-        new MockOperator({b1, b2}),
-        [](const Tuple& left, const Tuple& right) {
-            return left.values[0] == right.values[0];
+
+        new ScanOperator(
+            bmPersonas,
+            smPersonas.getNumPages()
+        ),
+
+        new ScanOperator(
+            bmCiudades,
+            smCiudades.getNumPages()
+        ),
+
+        [](const Tuple& persona, const Tuple& ciudad) {
+
+            // personas:
+            // nombre | edad | ciudad
+            // ciudades:
+            // ciudad | pais
+
+            return persona.values[2] == ciudad.values[0];
         }
     );
 
@@ -67,16 +69,24 @@ int main() {
     int rows = 0;
 
     while (join->next(result)) {
+
         for (const auto& value : result.values)
             std::cout << value << " ";
 
         std::cout << "\n";
+
         rows++;
     }
 
     join->close();
 
-    assert(rows == 2);
+    std::cout << "\n--- explain() ---\n";
+    join->explain(std::cout);
+
+    std::cout << "\nTotal joins encontrados: "
+              << rows << "\n";
+
+    assert(rows > 0);
 
     delete join;
 
