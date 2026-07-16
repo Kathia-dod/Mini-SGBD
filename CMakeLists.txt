@@ -103,3 +103,8 @@ add_executable(test_csv_load
     ${STORAGE_SOURCES}
     ${BUFFER_SOURCES}
 )
+
+add_executable(test_query_join
+    tests/test_query_join.cpp
+    src/query/JoinOperator.cpp
+)

@@ -32,6 +32,10 @@ public:
 
     void close() override;
 
+    std::string name() const override {
+    return "Join";
+    }
+
     void explain(std::ostream& os, int depth = 0) const override;
 };
 
