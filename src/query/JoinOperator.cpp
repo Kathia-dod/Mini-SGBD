@@ -1,5 +1,4 @@
 #include "JoinOperator.hpp"
-#include <iostream>
 
 JoinOperator::JoinOperator(
     Operator* left,
@@ -20,10 +19,13 @@ JoinOperator::~JoinOperator() {
 }
 
 void JoinOperator::open() {
+    Operator::open();
+
     left_->open();
     right_->open();
 
     leftValid_ = left_->next(leftTuple_);
+    rightValid_ = false;
 }
 
 bool JoinOperator::next(Tuple& tuple) {
@@ -40,13 +42,13 @@ bool JoinOperator::next(Tuple& tuple) {
 
                 tuple.values.clear();
 
-                for (const auto& value : leftTuple_.values) {
+                for (const auto& value : leftTuple_.values)
                     tuple.values.push_back(value);
-                }
 
-                for (const auto& value : rightTuple_.values) {
+                for (const auto& value : rightTuple_.values)
                     tuple.values.push_back(value);
-                }
+
+                tuplesProduced_++;
 
                 rightValid_ = right_->next(rightTuple_);
 
@@ -56,6 +58,9 @@ bool JoinOperator::next(Tuple& tuple) {
             rightValid_ = right_->next(rightTuple_);
         }
 
+        /*El lado derecho debe reiniciarse para comparar
+         con la siguiente tupla del lado izquierdo.*/
+         
         right_->close();
         right_->open();
 
@@ -67,14 +72,21 @@ bool JoinOperator::next(Tuple& tuple) {
 }
 
 void JoinOperator::close() {
+
     left_->close();
     right_->close();
+
     Operator::close();
 }
 
 void JoinOperator::explain(std::ostream& os, int depth) const {
+
     os << std::string(depth * 2, ' ')
        << "Nested Loop Join"
        << " -> tuplas: " << tuplesProduced_
-       << ", tiempo: " << elapsedMs() << "ms\n";
+       << ", tiempo: " << elapsedMs()
+       << " ms\n";
+
+    left_->explain(os, depth + 1);
+    right_->explain(os, depth + 1);
 }
