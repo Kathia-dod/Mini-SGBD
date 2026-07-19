@@ -23,6 +23,10 @@ set(QUERY_SOURCES
     src/query/JoinOperator.cpp
 )
 
+set(QUERY_PARSER_SOURCES
+    src/query/QueryParser.cpp
+)
+
 add_executable(mini_sgbd
     src/main.cpp
     ${STORAGE_SOURCES}
@@ -125,4 +129,9 @@ add_executable(test_query_join
     ${BUFFER_SOURCES}
     ${INDEX_SOURCES}
     ${QUERY_SOURCES}
+)
+
+add_executable(test_query_parser
+    tests/test_query_parser.cpp
+    ${QUERY_PARSER_SOURCES}
 )

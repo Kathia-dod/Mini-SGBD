@@ -11,7 +11,7 @@ public:
     QueryParser() = default;
 
     /**
-     * @brief Analiza una consulta SQL minimalista y genera su representación estructural.
+     * @brief Analiza una consulta SQL minimalista y genera su representacion estructural.
      * @param sql Cadena de texto con el query (ej: "SELECT id, nombre FROM datos WHERE id > 10 ORDER BY id DESC")
      * @return QueryStatement Estructura con la metadata de la consulta
      */
