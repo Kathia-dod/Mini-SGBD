@@ -34,6 +34,7 @@ public:
                 currentSlot_++;
                 if (ok) {
                     out = Tuple::deserialize(buf, len);
+                    out.rid = static_cast<int>(currentPageId_ * 1000 + currentSlot_ - 1);
                     tuplesProduced_++;
                     return true;
                 }

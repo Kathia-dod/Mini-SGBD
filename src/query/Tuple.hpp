@@ -6,6 +6,7 @@
 
 struct Tuple {
     std::vector<std::string> values;
+    int rid = -1;    // pageId*1000+slot; -1 si no aplica (ej. resultado de JOIN)
 
     std::string serialize() const {
         std::ostringstream oss;
