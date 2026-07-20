@@ -138,3 +138,8 @@ add_executable(test_query_parser
 
 add_executable(test_query_sort 
     tests/test_query_sort.cpp)
+
+add_executable(test_query_text_vs_manual
+    tests/test_query_text_vs_manual.cpp
+    ${QUERY_PARSER_SOURCES}
+)

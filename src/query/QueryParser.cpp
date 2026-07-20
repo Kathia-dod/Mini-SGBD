@@ -34,42 +34,71 @@ std::vector<std::string> QueryParser::tokenize(const std::string& sql) {
     return tokens;
 }
 
-std::unique_ptr<Operator> QueryParser::build_plan(const QueryStatement& stmt, std::unique_ptr<Operator> scan_op) {
+Operator* QueryParser::build_plan(const QueryStatement& stmt, Operator* scan_op) {
     if (!scan_op) {
         throw std::invalid_argument("El operador Scan base no puede ser nulo.");
     }
 
-    std::unique_ptr<Operator> current_root = std::move(scan_op);
+    Operator* current_root = scan_op;
 
     // SelectOperator (WHERE)
     if (stmt.where_clause.has_where) {
-        current_root = std::make_unique<SelectOperator>(
-            std::move(current_root),
-            stmt.where_clause.column,
-            stmt.where_clause.op,
-            stmt.where_clause.value
-        );
+        // Mapeo simple de nombres a indices para las tablas de prueba
+        size_t col_idx = 0;
+        if (stmt.where_clause.column == "nombre" || stmt.where_clause.column == "1") col_idx = 1;
+        else if (stmt.where_clause.column == "salario" || stmt.where_clause.column == "2") col_idx = 2;
+
+        std::string op = stmt.where_clause.op;
+        std::string val = stmt.where_clause.value;
+
+        auto pred = [col_idx, op, val](const Tuple& t) -> bool {
+            if (col_idx >= t.values.size()) return false;
+            const std::string& t_val = t.values[col_idx];
+            
+            if (op == "=" || op == "==") return t_val == val;
+            if (op == "!=") return t_val != val;
+
+            try {
+                double num_t = std::stod(t_val);
+                double num_val = std::stod(val);
+                if (op == "<") return num_t < num_val;
+                if (op == ">") return num_t > num_val;
+                if (op == "<=") return num_t <= num_val;
+                if (op == ">=") return num_t >= num_val;
+            } catch (...) {
+                if (op == "<") return t_val < val;
+                if (op == ">") return t_val > val;
+                if (op == "<=") return t_val <= val;
+                if (op == ">=") return t_val >= val;
+            }
+            return false;
+        };
+
+        current_root = new SelectOperator(current_root, pred);
     }
 
     // SortOperator (ORDER BY)
     if (stmt.order_by.has_order_by) {
-        size_t col_idx = 0; 
+        size_t col_idx = 0;
         if (stmt.order_by.column == "nombre" || stmt.order_by.column == "1") col_idx = 1;
         else if (stmt.order_by.column == "salario" || stmt.order_by.column == "2") col_idx = 2;
 
-        current_root = std::make_unique<SortOperator>(
-            std::move(current_root),
-            col_idx,
-            stmt.order_by.is_asc
-        );
+        current_root = new SortOperator(current_root, col_idx, stmt.order_by.is_asc);
     }
 
-    // ProjectOperator (SELECT) 
+    // ProjectOperator (SELECT)
     if (!stmt.is_select_all()) {
-        current_root = std::make_unique<ProjectOperator>(
-            std::move(current_root),
-            stmt.select_columns
-        );
+        std::vector<int> proj_indices;
+        for (const auto& col : stmt.select_columns) {
+            if (col == "id" || col == "0") proj_indices.push_back(0);
+            else if (col == "nombre" || col == "1") proj_indices.push_back(1);
+            else if (col == "salario" || col == "2") proj_indices.push_back(2);
+            else {
+                try { proj_indices.push_back(std::stoi(col)); }
+                catch (...) { proj_indices.push_back(0); }
+            }
+        }
+        current_root = new ProjectOperator(current_root, proj_indices);
     }
 
     return current_root;

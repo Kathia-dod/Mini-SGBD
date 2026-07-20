@@ -7,6 +7,7 @@
 #include "SelectOperator.hpp"
 #include "SortOperator.hpp"
 #include "ProjectOperator.hpp"
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -23,11 +24,11 @@ public:
      * @return std::unique_ptr<Operator> Raíz del árbol de operadores listos para ejecutar.
      */
     QueryStatement parse(const std::string& sql);
+    Operator* build_plan(const QueryStatement& stmt, Operator* scan_op);
 
 private:
     std::vector<std::string> tokenize(const std::string& sql);
     std::string to_upper(const std::string& str);
-    std::unique_ptr<Operator> build_plan(const QueryStatement& stmt, std::unique_ptr<Operator> scan_op);
     void parse_select(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);
     void parse_from(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);
     void parse_where(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);

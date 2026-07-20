@@ -6,13 +6,12 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <memory>
 #include <stdexcept>
 #include <cstdlib>
 
 class SortOperator : public Operator {
 private:
-    std::unique_ptr<Operator> child_;
+    Operator* child_;
     size_t sort_col_idx_;
     bool is_asc_;
     
@@ -27,16 +26,11 @@ private:
     }
 
 public:
-    /**
-     * @brief Constructor del operador de ordenamiento en memoria.
-     * @param child Operador hijo en el árbol algebraico.
-     * @param sort_col_idx Índice numérico de la columna por la cual ordenar (0-indexed).
-     * @param is_asc true para ASC, false para DESC.
-     */
-    SortOperator(std::unique_ptr<Operator> child, size_t sort_col_idx, bool is_asc = true)
-        : child_(std::move(child)), sort_col_idx_(sort_col_idx), is_asc_(is_asc), current_index_(0) {}
+    SortOperator(Operator* child, size_t sort_col_idx, bool is_asc = true)
+        : child_(child), sort_col_idx_(sort_col_idx), is_asc_(is_asc), current_index_(0) {}
 
     void open() override {
+        if (!child_) return;
         child_->open();
         sorted_tuples_.clear();
         current_index_ = 0;
@@ -46,12 +40,10 @@ public:
             sorted_tuples_.push_back(tuple);
         }
 
-        if (sorted_tuples_.empty()) {
-            return;
-        }
+        if (sorted_tuples_.empty()) return;
 
         if (sort_col_idx_ >= sorted_tuples_[0].values.size()) {
-            throw std::runtime_error("SortOperator Error: Indice de columna fuera de los limites de la tupla.");
+            throw std::runtime_error("SortOperator Error: Índice de columna fuera de los límites.");
         }
 
         std::stable_sort(sorted_tuples_.begin(), sorted_tuples_.end(), [this](const Tuple& a, const Tuple& b) {
@@ -80,20 +72,16 @@ public:
     void close() override {
         sorted_tuples_.clear();
         current_index_ = 0;
-        child_->close();
+        if (child_) child_->close();
     }
 
-    std::string name() const override {
-        return "SortOperator";
-    }
+    std::string name() const override { return "SortOperator"; }
 
     void explain(std::ostream& out, int depth = 0) const override {
         std::string indent(depth * 2, ' ');
         out << indent << "SortOperator(col_idx=" << sort_col_idx_ 
             << ", order=" << (is_asc_ ? "ASC" : "DESC") << ")\n";
-        if (child_) {
-            child_->explain(out, depth + 1);
-        }
+        if (child_) child_->explain(out, depth + 1);
     }
 };
 
