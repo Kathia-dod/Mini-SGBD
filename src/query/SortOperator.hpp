@@ -8,16 +8,16 @@
 #include <algorithm>
 #include <memory>
 #include <stdexcept>
+#include <cstdlib>
 
 class SortOperator : public Operator {
 private:
     std::unique_ptr<Operator> child_;
-    std::string sort_column_;
+    size_t sort_col_idx_;
     bool is_asc_;
     
     std::vector<Tuple> sorted_tuples_;
     size_t current_index_;
-    int sort_col_idx_;
 
     bool is_numeric(const std::string& str) const {
         if (str.empty()) return false;
@@ -27,14 +27,19 @@ private:
     }
 
 public:
-    SortOperator(std::unique_ptr<Operator> child, const std::string& sort_column, bool is_asc = true)
-        : child_(std::move(child)), sort_column_(sort_column), is_asc_(is_asc), current_index_(0), sort_col_idx_(-1) {}
+    /**
+     * @brief Constructor del operador de ordenamiento en memoria.
+     * @param child Operador hijo en el árbol algebraico.
+     * @param sort_col_idx Índice numérico de la columna por la cual ordenar (0-indexed).
+     * @param is_asc true para ASC, false para DESC.
+     */
+    SortOperator(std::unique_ptr<Operator> child, size_t sort_col_idx, bool is_asc = true)
+        : child_(std::move(child)), sort_col_idx_(sort_col_idx), is_asc_(is_asc), current_index_(0) {}
 
     void open() override {
         child_->open();
         sorted_tuples_.clear();
         current_index_ = 0;
-        sort_col_idx_ = -1;
 
         Tuple tuple;
         while (child_->next(tuple)) {
@@ -45,21 +50,13 @@ public:
             return;
         }
 
-        const auto& schema = sorted_tuples_[0].get_schema();
-        for (size_t i = 0; i < schema.size(); ++i) {
-            if (schema[i] == sort_column_) {
-                sort_col_idx_ = static_cast<int>(i);
-                break;
-            }
-        }
-
-        if (sort_col_idx_ == -1) {
-            throw std::runtime_error("SortOperator Error: Columna de ordenamiento '" + sort_column_ + "' no encontrada en el esquema.");
+        if (sort_col_idx_ >= sorted_tuples_[0].values.size()) {
+            throw std::runtime_error("SortOperator Error: Indice de columna fuera de los limites de la tupla.");
         }
 
         std::stable_sort(sorted_tuples_.begin(), sorted_tuples_.end(), [this](const Tuple& a, const Tuple& b) {
-            const std::string& val_a = a.get_value(sort_col_idx_);
-            const std::string& val_b = b.get_value(sort_col_idx_);
+            const std::string& val_a = a.values[sort_col_idx_];
+            const std::string& val_b = b.values[sort_col_idx_];
 
             bool less_than = false;
             if (is_numeric(val_a) && is_numeric(val_b)) {
@@ -84,6 +81,19 @@ public:
         sorted_tuples_.clear();
         current_index_ = 0;
         child_->close();
+    }
+
+    std::string name() const override {
+        return "SortOperator";
+    }
+
+    void explain(std::ostream& out, int depth = 0) const override {
+        std::string indent(depth * 2, ' ');
+        out << indent << "SortOperator(col_idx=" << sort_col_idx_ 
+            << ", order=" << (is_asc_ ? "ASC" : "DESC") << ")\n";
+        if (child_) {
+            child_->explain(out, depth + 1);
+        }
     }
 };
 

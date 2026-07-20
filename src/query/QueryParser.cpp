@@ -53,9 +53,13 @@ std::unique_ptr<Operator> QueryParser::build_plan(const QueryStatement& stmt, st
 
     // SortOperator (ORDER BY)
     if (stmt.order_by.has_order_by) {
+        size_t col_idx = 0; 
+        if (stmt.order_by.column == "nombre" || stmt.order_by.column == "1") col_idx = 1;
+        else if (stmt.order_by.column == "salario" || stmt.order_by.column == "2") col_idx = 2;
+
         current_root = std::make_unique<SortOperator>(
             std::move(current_root),
-            stmt.order_by.column,
+            col_idx,
             stmt.order_by.is_asc
         );
     }

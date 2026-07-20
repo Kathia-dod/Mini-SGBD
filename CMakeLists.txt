@@ -135,3 +135,6 @@ add_executable(test_query_parser
     tests/test_query_parser.cpp
     ${QUERY_PARSER_SOURCES}
 )
+
+add_executable(test_query_sort 
+    tests/test_query_sort.cpp)
