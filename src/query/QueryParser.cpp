@@ -34,6 +34,43 @@ std::vector<std::string> QueryParser::tokenize(const std::string& sql) {
     return tokens;
 }
 
+std::unique_ptr<Operator> QueryParser::build_plan(const QueryStatement& stmt, std::unique_ptr<Operator> scan_op) {
+    if (!scan_op) {
+        throw std::invalid_argument("El operador Scan base no puede ser nulo.");
+    }
+
+    std::unique_ptr<Operator> current_root = std::move(scan_op);
+
+    // SelectOperator (WHERE)
+    if (stmt.where_clause.has_where) {
+        current_root = std::make_unique<SelectOperator>(
+            std::move(current_root),
+            stmt.where_clause.column,
+            stmt.where_clause.op,
+            stmt.where_clause.value
+        );
+    }
+
+    // SortOperator (ORDER BY)
+    if (stmt.order_by.has_order_by) {
+        current_root = std::make_unique<SortOperator>(
+            std::move(current_root),
+            stmt.order_by.column,
+            stmt.order_by.is_asc
+        );
+    }
+
+    // ProjectOperator (SELECT) 
+    if (!stmt.is_select_all()) {
+        current_root = std::make_unique<ProjectOperator>(
+            std::move(current_root),
+            stmt.select_columns
+        );
+    }
+
+    return current_root;
+}
+
 QueryStatement QueryParser::parse(const std::string& sql) {
     std::vector<std::string> tokens = tokenize(sql);
     if (tokens.empty()) {

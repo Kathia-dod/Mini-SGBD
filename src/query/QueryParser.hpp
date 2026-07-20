@@ -2,6 +2,12 @@
 #define QUERY_PARSER_HPP
 
 #include "QueryStatement.hpp"
+#include "Operator.hpp"
+#include "ScanOperator.hpp"
+#include "SelectOperator.hpp"
+#include "SortOperator.hpp"
+#include "ProjectOperator.hpp"
+#include <memory>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -11,15 +17,17 @@ public:
     QueryParser() = default;
 
     /**
-     * @brief Analiza una consulta SQL minimalista y genera su representacion estructural.
-     * @param sql Cadena de texto con el query (ej: "SELECT id, nombre FROM datos WHERE id > 10 ORDER BY id DESC")
-     * @return QueryStatement Estructura con la metadata de la consulta
+     * @brief Construye el árbol físico de operadores (Execution Plan) a partir de un QueryStatement.
+     * @param stmt Estructura con la metadata de la consulta ya parseada.
+     * @param scan_op Puntero único al ScanOperator raíz de la tabla (injected dependency).
+     * @return std::unique_ptr<Operator> Raíz del árbol de operadores listos para ejecutar.
      */
     QueryStatement parse(const std::string& sql);
 
 private:
     std::vector<std::string> tokenize(const std::string& sql);
     std::string to_upper(const std::string& str);
+    std::unique_ptr<Operator> build_plan(const QueryStatement& stmt, std::unique_ptr<Operator> scan_op);
     void parse_select(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);
     void parse_from(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);
     void parse_where(const std::vector<std::string>& tokens, size_t& index, QueryStatement& stmt);
