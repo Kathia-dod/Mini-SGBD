@@ -68,7 +68,7 @@ void test_sort_numeric_asc() {
     };
 
     auto mock_scan = std::make_unique<MockScanOperator>(datos_input);
-    SortOperator sort_op(std::move(mock_scan), 0, true); 
+    SortOperator sort_op(mock_scan.get(), 0, true); 
 
     sort_op.open();
 
@@ -95,7 +95,7 @@ void test_sort_string_desc() {
     };
 
     auto mock_scan = std::make_unique<MockScanOperator>(datos_input);
-    SortOperator sort_op(std::move(mock_scan), 1, false);
+    SortOperator sort_op(mock_scan.get(), 1, false);
 
     sort_op.open();
 
@@ -117,7 +117,7 @@ void test_sort_empty_table() {
     std::vector<Tuple> datos_input = {};
 
     auto mock_scan = std::make_unique<MockScanOperator>(datos_input);
-    SortOperator sort_op(std::move(mock_scan), 0, true);
+    SortOperator sort_op(mock_scan.get(), 0, true);
 
     sort_op.open();
     Tuple t;
@@ -136,7 +136,7 @@ void test_sort_invalid_column() {
     };
 
     auto mock_scan = std::make_unique<MockScanOperator>(datos_input);
-    SortOperator sort_op(std::move(mock_scan), 99, true); // Indice 99 no existe
+    SortOperator sort_op(mock_scan.get(), 99, true); // Indice 99 no existe
 
     try {
         sort_op.open();
