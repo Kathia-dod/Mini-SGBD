@@ -143,3 +143,25 @@ add_executable(test_query_text_vs_manual
     tests/test_query_text_vs_manual.cpp
     ${QUERY_PARSER_SOURCES}
 )
+
+add_executable(test_benchmark_index_scan
+    tests/test_benchmark_index_scan.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
+
+add_executable(test_benchmark_hitrate
+    tests/test_benchmark_hitrate.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
+
+add_executable(test_edge_cases
+    tests/test_edge_cases.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+    ${QUERY_SOURCES}
+)
