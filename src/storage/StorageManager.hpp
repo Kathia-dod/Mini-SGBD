@@ -2,6 +2,7 @@
 #include "DiskManager.hpp"
 #include "Page.hpp"
 #include <string>
+#include <vector>
 using namespace std;
 
 // Página 0: reservada para metadatos del sistema (next_page_id, etc.), nunca para almacenar registros de usuario
@@ -34,8 +35,8 @@ public:
 
 private:
     DiskManager disk_;
-    Page pages_[MAX_PAGES];
-    bool loaded_[MAX_PAGES];
+    std::vector<Page> pages_;
+    std::vector<bool> loaded_;
     uint32_t next_page_id_;
 
     // Lee/escribe next_page_id desde/hacia la metapágina (página 0 en disco), garantiza que tras reiniciar el programa, allocatePage() no sobreescriba páginas que ya tienen datos

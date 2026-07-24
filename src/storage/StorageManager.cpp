@@ -5,7 +5,9 @@
 using namespace std;
 
 StorageManager::StorageManager(const string& filename) : disk_(filename), next_page_id_(1) {
-    memset(loaded_, false, sizeof(loaded_));
+  
+    pages_.resize(MAX_PAGES);
+    loaded_.assign(MAX_PAGES, false);
 
     if (disk_.numPages() > 0) {
         loadMeta();

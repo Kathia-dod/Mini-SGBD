@@ -165,3 +165,11 @@ add_executable(test_edge_cases
     ${INDEX_SOURCES}
     ${QUERY_SOURCES}
 )
+
+add_executable(test_live_demo
+    tests/test_live_demo.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+    ${QUERY_SOURCES}
+)
