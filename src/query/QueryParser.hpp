@@ -24,7 +24,7 @@ public:
      * @return std::unique_ptr<Operator> Raíz del árbol de operadores listos para ejecutar.
      */
     QueryStatement parse(const std::string& sql);
-    Operator* build_plan(const QueryStatement& stmt, Operator* scan_op);
+    Operator* build_plan(const QueryStatement& stmt, Operator* access_path_root, bool where_already_applied = false);
 
 private:
     std::vector<std::string> tokenize(const std::string& sql);

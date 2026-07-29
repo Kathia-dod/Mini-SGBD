@@ -34,15 +34,15 @@ std::vector<std::string> QueryParser::tokenize(const std::string& sql) {
     return tokens;
 }
 
-Operator* QueryParser::build_plan(const QueryStatement& stmt, Operator* scan_op) {
-    if (!scan_op) {
-        throw std::invalid_argument("El operador Scan base no puede ser nulo.");
+Operator* QueryParser::build_plan(const QueryStatement& stmt, Operator* access_path_root, bool where_already_applied) {
+    if (!access_path_root) {
+        throw std::invalid_argument("El operador de acceso base no puede ser nulo.");
     }
 
-    Operator* current_root = scan_op;
+    Operator* current_root = access_path_root;
 
     // SelectOperator (WHERE)
-    if (stmt.where_clause.has_where) {
+    if (stmt.where_clause.has_where && !where_already_applied) {
         // Mapeo simple de nombres a indices para las tablas de prueba
         size_t col_idx = 0;
         if (stmt.where_clause.column == "nombre" || stmt.where_clause.column == "1") col_idx = 1;
