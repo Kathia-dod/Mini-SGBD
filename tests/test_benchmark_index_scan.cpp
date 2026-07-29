@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <iomanip>
 
 #include "../src/storage/StorageManager.hpp"
 #include "../src/buffer/BufferManager.hpp"
@@ -20,14 +21,16 @@ struct BenchResult {
     long paginasLeidas;
     double tiempoMs;
     bool encontrado;
+    string detalle;
 };
 
 void imprimir(const BenchResult& r) {
-    cout << "  [" << r.metodo << "] edad=" << r.clave
+    cout << "  [" << left << setw(24) << r.metodo << "] edad=" << setw(3) << r.clave
          << " | encontrado=" << (r.encontrado ? "SI" : "NO")
-         << " | tuplas=" << r.tuplas
-         << " | paginas_leidas=" << r.paginasLeidas
-         << " | tiempo=" << r.tiempoMs << " ms\n";
+         << " | tuplas=" << setw(4) << r.tuplas
+         << " | paginas_leidas=" << setw(4) << r.paginasLeidas
+         << " | tiempo=" << setw(8) << r.tiempoMs << " ms"
+         << "| " << r.detalle << "\n";
 }
 
 BenchResult benchScanSelect(BufferManager& bm, uint32_t maxPageId, int edad) {
@@ -42,9 +45,11 @@ BenchResult benchScanSelect(BufferManager& bm, uint32_t maxPageId, int edad) {
     while (plan->next(t)) encontrado = true;
     plan->close();
 
+    string detalle = encontrado ? ("dpto=" + t.values[3] + " salario=" + t.values[4]) : "-";
+
     BenchResult r{"Scan+Select (sin indice)", edad,
                    plan->tuplesProduced(), plan->pagesRead(),
-                   plan->elapsedMs(), encontrado};
+                   plan->elapsedMs(), encontrado, detalle};
     delete plan;
     return r;
 }
@@ -57,9 +62,11 @@ BenchResult benchIndexScan(BufferManager& bm, BTreeIndex& index, int edad) {
     bool encontrado = scan.next(t);
     scan.close();
 
+    string detalle = encontrado ? ("dpto=" + t.values[3] + " salario=" + t.values[4]) : "-";
+
     BenchResult r{"IndexScan (con indice B+)", edad,
                    scan.tuplesProduced(), scan.pagesRead(),
-                   scan.elapsedMs(), encontrado};
+                   scan.elapsedMs(), encontrado, detalle};
     return r;
 }
 
@@ -78,7 +85,7 @@ int main() {
     int insertedB = CsvLoader::load("data/datos1.csv", bmB, &index);
     cout << "[Con indice] " << insertedB << " registros cargados\n";
 
-    vector<int> claves = {18, 20, 25, 30, 40, 50, 60, 9999}; // 9999 no existe
+    vector<int> claves = {18, 20, 22, 25, 28, 30, 33, 35, 38, 40, 43, 45, 48, 50, 53, 55, 58, 60, 65, 9999}; // 9999 no existe
 
     cout << "\n------------ BENCHMARK: Scan+Select vs IndexScan -----------\n";
     for (int edad : claves) {
