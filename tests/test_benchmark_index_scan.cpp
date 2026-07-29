@@ -9,6 +9,8 @@
 #include "../src/query/CsvLoader.hpp"
 #include "../src/query/ScanOperator.hpp"
 #include "../src/query/SelectOperator.hpp"
+#include "../src/query/QueryOptimizer.hpp"
+#include "../src/query/QueryStatement.hpp"
 #include "../src/query/IndexScanOperator.hpp"
 #include "../src/index/BTreeIndex.hpp"
 
@@ -70,6 +72,36 @@ BenchResult benchIndexScan(BufferManager& bm, BTreeIndex& index, int edad) {
     return r;
 }
 
+BenchResult benchViaOptimizer(BufferManager& bm, uint32_t maxPageId, QueryOptimizer& opt, int edad) {
+    QueryStatement stmt;
+    stmt.select_columns = {"*"};
+    stmt.from_table = "datos1";
+    stmt.where_clause = {true, "edad", "=", std::to_string(edad)};
+
+    Operator* access = opt.chooseAccessPath(stmt, bm, maxPageId);
+    string ruta = opt.lastPathUsedIndex() ? "IndexScan" : "Scan+Select";
+
+    Operator* plan = opt.lastPathUsedIndex()
+        ? access
+        : new SelectOperator(access, [edad](const Tuple& t) { return std::stoi(t.values[1]) == edad; });
+
+    plan->open();
+    Tuple t;
+    bool encontrado = false;
+    if (opt.lastPathUsedIndex()) {
+        encontrado = plan->next(t);
+    } else {
+        while (plan->next(t)) encontrado = true;
+    }
+    plan->close();
+
+    string detalle = encontrado ? ("dpto=" + t.values[3] + " salario=" + t.values[4]) : "-";
+
+    BenchResult r{"Optimizer -> " + ruta, edad, plan->tuplesProduced(), plan->pagesRead(), plan->elapsedMs(), encontrado, detalle};
+    delete plan;
+    return r;
+}
+
 int main() {
     remove("bench_no_index.bin");
     remove("bench_with_index.bin");
@@ -95,6 +127,15 @@ int main() {
 
         BenchResult conIdx = benchIndexScan(bmB, index, edad);
         imprimir(conIdx);
+
+        QueryOptimizer optA; 
+        BenchResult viaOptA = benchViaOptimizer(bmA, smA.getNumPages(), optA, edad);
+        imprimir(viaOptA);
+
+        QueryOptimizer optB;
+        optB.registerIndex("edad", &index); 
+        BenchResult viaOptB = benchViaOptimizer(bmB, smB.getNumPages(), optB, edad);
+        imprimir(viaOptB);
 
         if (sinIdx.paginasLeidas > 0) {
             double mejora = 100.0 * (1.0 - (double)conIdx.paginasLeidas / sinIdx.paginasLeidas);
