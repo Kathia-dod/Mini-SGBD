@@ -2,6 +2,7 @@
 #include "../src/buffer/BufferManager.hpp"
 #include "../src/query/CsvLoader.hpp"
 #include "../src/query/QueryOptimizer.hpp"
+#include "../src/query/SelectOperator.hpp"
 #include "../src/query/QueryStatement.hpp"
 #include "../src/index/BTreeIndex.hpp"
 
