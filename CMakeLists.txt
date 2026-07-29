@@ -173,3 +173,10 @@ add_executable(test_live_demo
     ${INDEX_SOURCES}
     ${QUERY_SOURCES}
 )
+
+add_executable(test_query_optimizer
+    tests/test_query_optimizer.cpp
+    ${STORAGE_SOURCES}
+    ${BUFFER_SOURCES}
+    ${INDEX_SOURCES}
+)
