@@ -23,18 +23,28 @@ static void imprimirTupla(const Tuple& t) {
 }
 
 int main() {
-    std::remove("test_query_optimizer.bin");
+    std::remove("test_optimizer_sin_indice.bin");
+    std::remove("test_optimizer_con_indice.bin");
 
-    StorageManager sm("test_query_optimizer.bin");
-    BufferManager  bm(10, sm);
-    BTreeIndex     index(&bm);
+    StorageManager smSinIndice("test_optimizer_sin_indice.bin");
+    BufferManager  bmSinIndice(20, smSinIndice);
 
-    int inserted = CsvLoader::load("data/datos1.csv", bm, &index); 
-    assert(inserted > 0);
-    uint32_t maxPageId = sm.getNumPages();
+    int insertedSinIndice = CsvLoader::load("data/datos1.csv", bmSinIndice);
+    assert(insertedSinIndice > 0);
+    uint32_t maxPageIdSinIndice = smSinIndice.getNumPages();
 
-    std::cout << "Dataset cargado: " << inserted << " registros, "
-               << maxPageId << " paginas de datos\n\n";
+
+    StorageManager smConIndice("test_optimizer_con_indice.bin");
+    BufferManager  bmConIndice(20, smConIndice);
+    BTreeIndex     index(&bmConIndice);
+
+    int insertedConIndice = CsvLoader::load("data/datos1.csv", bmConIndice, &index);
+    assert(insertedConIndice > 0);
+    uint32_t maxPageIdConIndice = smConIndice.getNumPages();
+
+    std::cout << "\nDataset sin indice : " << insertedSinIndice << " registros, " << maxPageIdSinIndice << " paginas de datos\n";
+    std::cout << "Dataset con indice : " << insertedConIndice << " registros, " << maxPageIdConIndice << " paginas totales (datos + B+ Tree)\n\n";
+
 
     // Caso 1: columna con indice + operador =, se debe elegir IndexScan
     {
@@ -46,7 +56,7 @@ int main() {
         stmt.from_table = "datos1";
         stmt.where_clause = {true, "edad", "=", "20"};
 
-        Operator* plan = opt.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* plan = opt.chooseAccessPath(stmt, bmConIndice, maxPageIdConIndice);
         assert(plan->name() == "IndexScan");
         assert(opt.lastPathUsedIndex());
 
@@ -72,12 +82,22 @@ int main() {
         stmt.from_table = "datos1";
         stmt.where_clause = {true, "edad", "=", "20"};
 
-        Operator* plan = opt.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* plan = opt.chooseAccessPath(stmt, bmSinIndice, maxPageIdSinIndice);
         assert(plan->name() == "Scan");
         assert(!opt.lastPathUsedIndex());
 
-        std::cout << "[Caso 2] columna 'edad' sin indice registrado : " << plan->name() << "\n\n";
-        delete plan;
+        Operator* filtrado = new SelectOperator(plan, [](const Tuple& t) { 
+            return std::stoi(t.values[1]) == 20; 
+        });
+
+        filtrado->open();
+        Tuple t;
+        int encontrados = 0;
+        while (filtrado->next(t)) encontrados++;
+        filtrado->close();
+
+        std::cout << "[Caso 2] columna 'edad' sin indice registrado -> Scan+Select, " << encontrados << " registros con edad=20, paginas leidas: " << filtrado->pagesRead() << "\n\n";
+        delete filtrado;
     }
 
     // Caso 3: columna CON indice pero operador NO es "=" -> debe elegir Scan
@@ -90,12 +110,20 @@ int main() {
         stmt.from_table = "datos1";
         stmt.where_clause = {true, "edad", ">", "20"};
 
-        Operator* plan = opt.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* plan = opt.chooseAccessPath(stmt, bmSinIndice, maxPageIdSinIndice);
         assert(plan->name() == "Scan");
         assert(!opt.lastPathUsedIndex());
 
-        std::cout << "[Caso 3] indice existe pero operador es '>' : " << plan->name() << "\n\n";
-        delete plan;
+        Operator* filtrado = new SelectOperator(plan, [](const Tuple& t) { return std::stoi(t.values[1]) > 60; });
+
+        filtrado->open();
+        Tuple t;
+        int encontrados = 0;
+        while (filtrado->next(t)) encontrados++;
+        filtrado->close();
+
+        std::cout << "[Caso 3] indice existe pero operador es '>' -> Scan+Select, " << encontrados << " registros con edad > 60\n\n";
+        delete filtrado;
     }
 
     // Caso 4: correctud cruzada: ambas rutas devuelven el MISMO resultado
@@ -109,14 +137,14 @@ int main() {
 
         QueryOptimizer optConIndice;
         optConIndice.registerIndex("edad", &index);
-        Operator* planConIndice = optConIndice.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* planConIndice = optConIndice.chooseAccessPath(stmt, bmConIndice, maxPageIdConIndice);
         planConIndice->open();
         Tuple resultadoIdx;
         bool encontradoIdx = planConIndice->next(resultadoIdx);
         planConIndice->close();
 
         QueryOptimizer optSinIndice; 
-        Operator* accessSinIndice = optSinIndice.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* accessSinIndice = optSinIndice.chooseAccessPath(stmt, bmSinIndice, maxPageIdSinIndice);
         Operator* planSinIndice = new SelectOperator(accessSinIndice, [edadBuscada](const Tuple& t) { 
             return std::stoi(t.values[1]) == edadBuscada; 
         }
@@ -130,7 +158,7 @@ int main() {
         assert(encontradoIdx == encontradoScan);
         assert(resultadoIdx.values == resultadoScan.values);
 
-        std::cout << "[Caso 4] IndexScan y Scan+Select devuelven el mismo resultado (edad = " << edadBuscada << ")\n";
+        std::cout << "[Caso 4] IndexScan (bmConIndice) y Scan+Select (bmSinIndice) devuelven el mismo resultado (edad = " << edadBuscada << ")\n";
         imprimirTupla(resultadoIdx);
         std::cout << "\n";
 
@@ -147,10 +175,12 @@ int main() {
         stmt.from_table = "datos1";
         stmt.where_clause = {true, "departamento", "=", "tecnologia"};
 
-        Operator* access = opt.chooseAccessPath(stmt, bm, maxPageId);
+        Operator* access = opt.chooseAccessPath(stmt, bmSinIndice, maxPageIdSinIndice);
         assert(access->name() == "Scan");
 
-        Operator* plan = new SelectOperator(access, [](const Tuple& t) { return t.values[3] == "tecnologia"; });
+        Operator* plan = new SelectOperator(access, [](const Tuple& t) { 
+            return t.values[3] == "tecnologia"; 
+        });
 
         plan->open();
         Tuple t;
@@ -164,9 +194,8 @@ int main() {
         }
         plan->close();
 
-        std::cout << "[Caso 5] departamento = 'tecnologia' (sin indice) -> " << encontrados
-                   << " registros encontrados, paginas leidas: " << plan->pagesRead()
-                   << ", tiempo: " << plan->elapsedMs() << " ms\n\n";
+        std::cout << "[Caso 5] departamento = 'tecnologia' (sin indice) -> " << encontrados << " registros encontrados, paginas leidas: " << plan->pagesRead()
+                  << ", tiempo: " << plan->elapsedMs() << " ms\n\n";
         delete plan;
     }
 
