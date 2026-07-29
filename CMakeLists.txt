@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Flags útiles: warnings estrictos + símbolos de debug para gdb/valgrind
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 
+# Enlace simbolico a data/ dentro de build/, para los tests que usan rutas relativas como "data/datos1.csv" funcionen 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/data)
+   file(CREATE_LINK ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data SYMBOLIC)
+endif()
+
 set(STORAGE_SOURCES
     src/storage/DiskManager.cpp
     src/storage/StorageManager.cpp
