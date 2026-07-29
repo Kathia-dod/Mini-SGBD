@@ -4,6 +4,8 @@
 #include "../src/query/ScanOperator.hpp"
 #include "../src/query/SelectOperator.hpp"
 #include "../src/query/IndexScanOperator.hpp"
+#include "../src/query/QueryOptimizer.hpp"
+#include "../src/query/QueryStatement.hpp"
 #include "../src/query/Tuple.hpp"
 
 #include <cassert>
@@ -85,28 +87,43 @@ int main() {
     std::cout << "    Buffer hits      : " << bm.getHits()   << "\n";
     std::cout << "    Buffer misses    : " << bm.getMisses() << "\n\n";
 
-    // --- 2) Consulta CON indice: IndexScanOperator ---
     int idBuscado = N / 2;
-    IndexScanOperator scanIdx(bm, index, idBuscado);
 
-    scanIdx.open();
+    // El QueryStatement: SELECT * FROM t WHERE id = idBuscado
+    QueryStatement stmt;
+    stmt.select_columns = {"*"};
+    stmt.from_table = "t";
+    stmt.where_clause = {true, "id", "=", std::to_string(idBuscado)};
+
+    // --- 2) QueryOptimizer decide la ruta con el indice registrado ---
+    QueryOptimizer optimizerConIndice;
+    optimizerConIndice.registerIndex("id", &index);
+
+    Operator* planConIndice = optimizerConIndice.chooseAccessPath(stmt, bm, maxDataPageId);
+
+    planConIndice->open();
     Tuple resultadoIdx;
-    bool encontradoIdx = scanIdx.next(resultadoIdx);
-    scanIdx.close();
+    bool encontradoIdx = planConIndice->next(resultadoIdx);
+    planConIndice->close();
 
     assert(encontradoIdx);
-    std::cout << "[2] Busqueda CON indice B+ Tree (id = " << idBuscado << ")\n";
+    std::cout << "[2] QueryOptimizer -- indice 'id' registrado (id = " << idBuscado << ")\n";
+    std::cout << "    Ruta elegida     : " << planConIndice->name() << "\n";
     std::cout << "    Encontrado       : " << (encontradoIdx ? "si" : "no") << "\n";
-    std::cout << "    Paginas leidas   : " << scanIdx.pagesRead()   << "\n";
-    std::cout << "    Tiempo           : " << scanIdx.elapsedMs()   << " ms\n";
+    std::cout << "    Paginas leidas   : " << planConIndice->pagesRead()   << "\n";
+    std::cout << "    Tiempo           : " << planConIndice->elapsedMs()   << " ms\n";
     std::cout << "    Registro         : ";
     for (auto& v : resultadoIdx.values) std::cout << v << " ";
     std::cout << "\n\n";
+    delete planConIndice;
 
-    // --- 3) La misma consulta SIN indice: Scan + Select ---
-    Operator* planSinIndice = new SelectOperator(
-        new ScanOperator(bm, maxDataPageId),   // solo el rango de paginas de DATOS
-        [idBuscado](const Tuple& t) { return std::stoi(t.values[0]) == idBuscado; }
+    // --- 3) query con un optimizer que no tiene el indice registrado ---
+    QueryOptimizer optimizerSinIndice; 
+
+    Operator* accessSinIndice = optimizerSinIndice.chooseAccessPath(stmt, bm, maxDataPageId);
+    Operator* planSinIndice = new SelectOperator(accessSinIndice, [idBuscado](const Tuple& t) { 
+        return std::stoi(t.values[0]) == idBuscado; 
+    }
     );
 
     planSinIndice->open();
@@ -116,7 +133,8 @@ int main() {
     planSinIndice->close();
 
     assert(encontradoScan);
-    std::cout << "[3] Misma busqueda SIN indice (Scan + Select)\n";
+    std::cout << "[3] QueryOptimizer -- misma query, sin indice registrado\n";
+    std::cout << "    Ruta elegida     : Scan -> Select (el optimizer no encontro indice)\n";
     std::cout << "    Encontrado       : " << (encontradoScan ? "si" : "no") << "\n";
     std::cout << "    Paginas leidas   : " << planSinIndice->pagesRead() << "\n";
     std::cout << "    Tiempo           : " << planSinIndice->elapsedMs() << " ms\n";
